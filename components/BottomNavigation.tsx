@@ -1,19 +1,22 @@
-'use client'
+"use client";
 
-import { motion } from 'framer-motion'
-import { MapPin, Plus, User } from 'lucide-react'
+import { motion } from "framer-motion";
+import { MapPin, Plus, User } from "lucide-react";
 
 interface BottomNavigationProps {
-  activeTab: 'explore' | 'contribute' | 'profile'
-  onTabChange: (tab: 'explore' | 'contribute' | 'profile') => void
+  activeTab: "explore" | "contribute" | "profile";
+  onTabChange: (tab: "explore" | "contribute" | "profile") => void;
 }
 
-export default function BottomNavigation({ activeTab, onTabChange }: BottomNavigationProps) {
+export default function BottomNavigation({
+  activeTab,
+  onTabChange,
+}: BottomNavigationProps) {
   const tabs = [
-    { id: 'explore', label: 'Explore', icon: MapPin },
-    { id: 'contribute', label: 'Contribute', icon: Plus },
-    { id: 'profile', label: 'Profile', icon: User }
-  ] as const
+    { id: "explore", label: "Explore", icon: MapPin },
+    { id: "contribute", label: "Contribute", icon: Plus },
+    { id: "profile", label: "Profile", icon: User },
+  ] as const;
 
   return (
     <motion.nav
@@ -22,10 +25,10 @@ export default function BottomNavigation({ activeTab, onTabChange }: BottomNavig
       transition={{ duration: 0.4 }}
       className="fixed bottom-0 left-0 right-0 md:hidden bg-background/95 backdrop-blur-lg border-t border-border/40"
     >
-      <div className="flex items-center justify-around px-4 py-3">
-        {tabs.map(tab => {
-          const IconComponent = tab.icon
-          const isActive = activeTab === tab.id
+      <div className="flex items-center justify-around px-4 py-3 min-h-14">
+        {tabs.map((tab) => {
+          const IconComponent = tab.icon;
+          const isActive = activeTab === tab.id;
 
           return (
             <motion.button
@@ -38,27 +41,27 @@ export default function BottomNavigation({ activeTab, onTabChange }: BottomNavig
               {isActive && (
                 <motion.div
                   layoutId="nav-pill"
-                  className="absolute inset-0 gradient-blue rounded-lg -z-10 glow-blue"
-                  transition={{ type: 'spring', bounce: 0.2 }}
+                  className="absolute inset-0 rounded-2xl bg-linear-to-br from-[rgb(var(--primary))] via-[rgb(var(--primary-container))] to-[rgb(var(--secondary-container))] -z-10 glow-blue"
+                  transition={{ type: "spring", bounce: 0.2 }}
                 />
               )}
 
               <IconComponent
                 className={`w-6 h-6 transition-colors ${
-                  isActive ? 'text-white' : 'text-muted-foreground'
+                  isActive ? "text-white" : "text-muted-foreground"
                 }`}
               />
               <span
                 className={`text-xs font-semibold transition-colors ${
-                  isActive ? 'text-white' : 'text-muted-foreground'
+                  isActive ? "text-white" : "text-muted-foreground"
                 }`}
               >
                 {tab.label}
               </span>
             </motion.button>
-          )
+          );
         })}
       </div>
     </motion.nav>
-  )
+  );
 }

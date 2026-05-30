@@ -1,40 +1,40 @@
-'use client'
+"use client";
 
-import { createClient } from '@/lib/supabase/client'
-import { Input } from '@/components/ui/input'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { LogIn, AlertCircle, Eye, EyeOff } from 'lucide-react'
+import { createClient } from "@/lib/supabase/client";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { LogIn, AlertCircle, Eye, EyeOff } from "lucide-react";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
-  const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const supabase = createClient()
-    setIsLoading(true)
-    setError(null)
+    e.preventDefault();
+    const supabase = createClient();
+    setIsLoading(true);
+    setError(null);
 
     try {
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
-      })
-      if (error) throw error
-      router.push('/')
+      });
+      if (error) throw error;
+      router.push("/");
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : 'An error occurred')
+      setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 py-8">
@@ -54,7 +54,9 @@ export default function LoginPage() {
             <span className="text-white font-bold text-lg">RW</span>
           </motion.div>
           <h1 className="text-3xl font-bold text-foreground mb-2">RouteWise</h1>
-          <p className="text-muted-foreground">Welcome back to community transport</p>
+          <p className="text-muted-foreground">
+            Welcome back to community transport
+          </p>
         </div>
 
         {/* Form Card */}
@@ -91,7 +93,7 @@ export default function LoginPage() {
               <div className="relative">
                 <Input
                   id="password"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -121,7 +123,7 @@ export default function LoginPage() {
                 animate={{ opacity: 1 }}
                 className="flex items-start gap-2 p-3 rounded-lg bg-red-50 border border-red-200"
               >
-                <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
+                <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
                 <p className="text-sm text-red-600">{error}</p>
               </motion.div>
             )}
@@ -135,7 +137,7 @@ export default function LoginPage() {
               className="w-full py-3 rounded-xl gradient-blue text-white font-semibold flex items-center justify-center gap-2 hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <LogIn className="w-4 h-4" />
-              {isLoading ? 'Signing in...' : 'Sign In'}
+              {isLoading ? "Signing in..." : "Sign In"}
             </motion.button>
 
             {/* Divider */}
@@ -144,7 +146,9 @@ export default function LoginPage() {
                 <div className="w-full border-t border-border"></div>
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="px-2 bg-background text-muted-foreground">New to RouteWise?</span>
+                <span className="px-2 bg-background text-muted-foreground">
+                  New to RouteWise?
+                </span>
               </div>
             </div>
 
@@ -164,5 +168,5 @@ export default function LoginPage() {
         </div>
       </motion.div>
     </div>
-  )
+  );
 }

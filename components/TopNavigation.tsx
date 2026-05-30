@@ -1,36 +1,36 @@
-'use client'
+"use client";
 
-import { motion } from 'framer-motion'
-import { Bell, User, LogOut, UserPlus } from 'lucide-react'
-import Link from 'next/link'
-import { useState } from 'react'
-import { useAuth } from '@/lib/auth-context'
-import { useRouter } from 'next/navigation'
+import { motion } from "framer-motion";
+import { Bell, User, LogOut, UserPlus } from "lucide-react";
+import Link from "next/link";
+import { useState } from "react";
+import { useAuth } from "@/lib/auth-context";
+import { useRouter } from "next/navigation";
 
 export default function TopNavigation() {
-  const { user, isAuthenticated, signOut } = useAuth()
-  const [showProfileMenu, setShowProfileMenu] = useState(false)
-  const router = useRouter()
+  const { user, isAuthenticated, signOut } = useAuth();
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const router = useRouter();
 
   const handleLogout = async () => {
-    await signOut()
-    setShowProfileMenu(false)
-    router.push('/')
-  }
+    await signOut();
+    setShowProfileMenu(false);
+    router.push("/");
+  };
   return (
     <motion.nav
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4 }}
-      className="sticky top-0 z-40 bg-background/80 backdrop-blur-lg border-b border-border/40"
+      className="sticky top-0 z-40 bg-[rgba(247,250,248,0.92)] backdrop-blur-xl border-b border-[rgba(110,122,112,0.12)]"
     >
       <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-linear-to-br from-primary to-blue-600 flex items-center justify-center">
-            <span className="text-white font-bold text-sm">RW</span>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[rgb(var(--primary))] via-[rgb(var(--primary-container))] to-[rgb(var(--secondary-container))] flex items-center justify-center shadow-[0_10px_20px_rgba(0,0,0,0.12)]">
+            <span className="text-white font-black text-sm">RW</span>
           </div>
-          <h1 className="text-xl font-bold bg-linear-to-r from-primary to-blue-400 bg-clip-text text-transparent">
+          <h1 className="text-xl md:text-2xl font-extrabold text-[rgb(var(--on-surface))]">
             RouteWise
           </h1>
         </div>
@@ -43,10 +43,10 @@ export default function TopNavigation() {
               <motion.button
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
-                className="relative p-2 rounded-lg hover:bg-card transition-colors"
+                className="relative p-2 rounded-2xl bg-[rgb(var(--surface-container-low))] hover:bg-[rgb(var(--surface-container))] transition-colors"
               >
-                <Bell className="w-5 h-5 text-muted-foreground hover:text-foreground transition-colors" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-primary rounded-full animate-pulse" />
+                <Bell className="w-5 h-5 text-[rgb(var(--primary))] transition-colors" />
+                <span className="absolute top-1 right-1 w-2 h-2 bg-[rgb(var(--secondary-container))] rounded-full animate-pulse" />
               </motion.button>
 
               {/* Profile Avatar with XP Ring */}
@@ -54,10 +54,10 @@ export default function TopNavigation() {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   onClick={() => setShowProfileMenu(!showProfileMenu)}
-                  className="w-10 h-10 rounded-full bg-linear-to-br from-primary/80 to-blue-500/80 flex items-center justify-center border-2 border-primary/30 cursor-pointer relative"
+                  className="w-10 h-10 rounded-full bg-gradient-to-br from-[rgb(var(--primary))]/90 via-[rgb(var(--inverse-primary))]/80 to-[rgb(var(--secondary-container))]/90 flex items-center justify-center border-2 border-[rgba(0,107,63,0.24)] cursor-pointer relative"
                 >
                   <span className="text-white font-bold text-xs">
-                    {user?.email?.[0].toUpperCase() || 'U'}
+                    {user?.email?.[0].toUpperCase() || "U"}
                   </span>
                 </motion.button>
 
@@ -70,11 +70,15 @@ export default function TopNavigation() {
                     className="absolute right-0 mt-2 w-48 bg-background border border-border rounded-xl shadow-lg overflow-hidden z-50"
                   >
                     <div className="p-3 border-b border-border">
-                      <p className="text-xs text-muted-foreground">Signed in as</p>
-                      <p className="text-sm font-semibold text-foreground truncate">{user?.email}</p>
+                      <p className="text-xs text-muted-foreground">
+                        Signed in as
+                      </p>
+                      <p className="text-sm font-semibold text-foreground truncate">
+                        {user?.email}
+                      </p>
                     </div>
                     <motion.button
-                      whileHover={{ backgroundColor: '#f5f5f5' }}
+                      whileHover={{ backgroundColor: "#f5f5f5" }}
                       onClick={handleLogout}
                       className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-card flex items-center gap-2 transition-colors border-t border-border"
                     >
@@ -88,7 +92,7 @@ export default function TopNavigation() {
                 <svg
                   className="absolute -inset-1 w-12 h-12"
                   viewBox="0 0 24 24"
-                  style={{ transform: 'rotate(-90deg)' }}
+                  style={{ transform: "rotate(-90deg)" }}
                 >
                   <circle
                     cx="12"
@@ -112,7 +116,13 @@ export default function TopNavigation() {
                     transition={{ duration: 1.5 }}
                   />
                   <defs>
-                    <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <linearGradient
+                      id="gradient"
+                      x1="0%"
+                      y1="0%"
+                      x2="100%"
+                      y2="100%"
+                    >
                       <stop offset="0%" stopColor="#2563FF" />
                       <stop offset="100%" stopColor="#3B82F6" />
                     </linearGradient>
@@ -125,7 +135,7 @@ export default function TopNavigation() {
           {!isAuthenticated && (
             <Link
               href="/auth/login"
-              className="px-4 py-2 rounded-lg bg-primary text-white font-semibold text-sm hover:shadow-lg transition-shadow flex items-center gap-2"
+              className="px-4 py-2 rounded-2xl bg-[rgb(var(--primary))] text-[rgb(var(--on-primary))] font-semibold text-sm hover:shadow-[0_10px_20px_rgba(0,0,0,0.12)] transition-shadow flex items-center gap-2"
             >
               <UserPlus className="w-4 h-4" />
               Sign In
@@ -134,5 +144,5 @@ export default function TopNavigation() {
         </div>
       </div>
     </motion.nav>
-  )
+  );
 }

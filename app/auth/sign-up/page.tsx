@@ -1,51 +1,51 @@
-'use client'
+"use client";
 
-import { createClient } from '@/lib/supabase/client'
-import { Input } from '@/components/ui/input'
-import Link from 'next/link'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { UserPlus, AlertCircle, Eye, EyeOff, CheckCircle } from 'lucide-react'
+import { createClient } from "@/lib/supabase/client";
+import { Input } from "@/components/ui/input";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { UserPlus, AlertCircle, Eye, EyeOff, CheckCircle } from "lucide-react";
 
 export default function SignUpPage() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
-  const [confirmPassword, setConfirmPassword] = useState('')
-  const [displayName, setDisplayName] = useState('')
-  const [error, setError] = useState<string | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
-  const [showConfirm, setShowConfirm] = useState(false)
-  const [passwordMatch, setPasswordMatch] = useState(true)
-  const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [passwordMatch, setPasswordMatch] = useState(true);
+  const router = useRouter();
 
   const handlePasswordChange = (value: string) => {
-    setPassword(value)
-    setPasswordMatch(value === confirmPassword || confirmPassword === '')
-  }
+    setPassword(value);
+    setPasswordMatch(value === confirmPassword || confirmPassword === "");
+  };
 
   const handleConfirmChange = (value: string) => {
-    setConfirmPassword(value)
-    setPasswordMatch(password === value || password === '')
-  }
+    setConfirmPassword(value);
+    setPasswordMatch(password === value || password === "");
+  };
 
   const handleSignUp = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const supabase = createClient()
-    setIsLoading(true)
-    setError(null)
+    e.preventDefault();
+    const supabase = createClient();
+    setIsLoading(true);
+    setError(null);
 
     if (password !== confirmPassword) {
-      setError('Passwords do not match')
-      setIsLoading(false)
-      return
+      setError("Passwords do not match");
+      setIsLoading(false);
+      return;
     }
 
     if (password.length < 8) {
-      setError('Password must be at least 8 characters long')
-      setIsLoading(false)
-      return
+      setError("Password must be at least 8 characters long");
+      setIsLoading(false);
+      return;
     }
 
     try {
@@ -60,15 +60,15 @@ export default function SignUpPage() {
             display_name: displayName,
           },
         },
-      })
-      if (error) throw error
-      router.push('/auth/sign-up-success')
+      });
+      if (error) throw error;
+      router.push("/auth/sign-up-success");
     } catch (error: unknown) {
-      setError(error instanceof Error ? error.message : 'An error occurred')
+      setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
-      setIsLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4 py-8">
@@ -98,7 +98,9 @@ export default function SignUpPage() {
           transition={{ duration: 0.4, delay: 0.1 }}
           className="glass-card p-6 sm:p-8 mb-6"
         >
-          <h2 className="text-2xl font-bold text-foreground mb-6">Create Account</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-6">
+            Create Account
+          </h2>
 
           <form onSubmit={handleSignUp} className="space-y-5">
             {/* Display Name */}
@@ -140,7 +142,7 @@ export default function SignUpPage() {
               <div className="relative">
                 <Input
                   id="password"
-                  type={showPassword ? 'text' : 'password'}
+                  type={showPassword ? "text" : "password"}
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => handlePasswordChange(e.target.value)}
@@ -172,7 +174,7 @@ export default function SignUpPage() {
               <div className="relative">
                 <Input
                   id="confirm-password"
-                  type={showConfirm ? 'text' : 'password'}
+                  type={showConfirm ? "text" : "password"}
                   placeholder="••••••••"
                   value={confirmPassword}
                   onChange={(e) => handleConfirmChange(e.target.value)}
@@ -210,7 +212,7 @@ export default function SignUpPage() {
                 animate={{ opacity: 1 }}
                 className="flex items-start gap-2 p-3 rounded-lg bg-red-50 border border-red-200"
               >
-                <AlertCircle className="w-4 h-4 text-red-600 flex-shrink-0 mt-0.5" />
+                <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
                 <p className="text-sm text-red-600">{error}</p>
               </motion.div>
             )}
@@ -224,7 +226,7 @@ export default function SignUpPage() {
               className="w-full py-3 rounded-xl gradient-blue text-white font-semibold flex items-center justify-center gap-2 hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <UserPlus className="w-4 h-4" />
-              {isLoading ? 'Creating account...' : 'Create Account'}
+              {isLoading ? "Creating account..." : "Create Account"}
             </motion.button>
 
             {/* Divider */}
@@ -233,7 +235,9 @@ export default function SignUpPage() {
                 <div className="w-full border-t border-border"></div>
               </div>
               <div className="relative flex justify-center text-xs uppercase">
-                <span className="px-2 bg-background text-muted-foreground">Already have an account?</span>
+                <span className="px-2 bg-background text-muted-foreground">
+                  Already have an account?
+                </span>
               </div>
             </div>
 
@@ -253,5 +257,5 @@ export default function SignUpPage() {
         </div>
       </motion.div>
     </div>
-  )
+  );
 }

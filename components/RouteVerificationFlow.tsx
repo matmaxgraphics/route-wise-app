@@ -145,7 +145,7 @@ export default function RouteVerificationFlow({
 
                 {/* Route Stats Grid */}
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="bg-muted/50 rounded-lg p-3">
+                  <div className="bg-[rgb(var(--surface-container-low))] rounded-lg p-3">
                     <p className="text-xs text-muted-foreground mb-1">
                       Estimated Fare
                     </p>
@@ -153,20 +153,20 @@ export default function RouteVerificationFlow({
                       {route.estimatedFare}
                     </p>
                   </div>
-                  <div className="bg-muted/50 rounded-lg p-3">
+                  <div className="bg-[rgb(var(--surface-container-low))] rounded-lg p-3">
                     <p className="text-xs text-muted-foreground mb-1">
                       Estimated Time
                     </p>
                     <p className="font-bold text-foreground flex items-center gap-1.5">
-                      <Clock className="w-4 h-4" />
+                      <Clock className="w-4 h-4 text-[rgb(var(--primary))]" />
                       {route.estimatedTime}
                     </p>
                   </div>
-                  <div className="bg-muted/50 rounded-lg p-3">
+                  <div className="bg-[rgb(var(--surface-container-low))] rounded-lg p-3">
                     <p className="text-xs text-muted-foreground mb-1">Steps</p>
                     <p className="font-bold text-foreground">{route.steps}</p>
                   </div>
-                  <div className="bg-muted/50 rounded-lg p-3">
+                  <div className="bg-[rgb(var(--surface-container-low))] rounded-lg p-3">
                     <p className="text-xs text-muted-foreground mb-1">
                       Current Confidence
                     </p>
@@ -188,7 +188,7 @@ export default function RouteVerificationFlow({
                   SUBMITTED BY
                 </p>
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-base font-bold text-primary">
+                  <div className="w-10 h-10 rounded-full bg-[rgb(var(--primary))]/15 flex items-center justify-center text-base font-bold text-[rgb(var(--primary))]">
                     {route.contributor[0]}
                   </div>
                   <div className="flex-1">
@@ -199,7 +199,7 @@ export default function RouteVerificationFlow({
                       {route.contributorLevel}
                     </p>
                   </div>
-                  <CheckCircle2 className="w-5 h-5 text-green-600" />
+                  <CheckCircle2 className="w-5 h-5 text-[rgb(var(--primary))]" />
                 </div>
               </motion.div>
 
@@ -208,14 +208,14 @@ export default function RouteVerificationFlow({
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.2 }}
-                className="flex gap-3 p-4 bg-blue-50 rounded-xl border border-blue-200"
+                className="flex gap-3 p-4 bg-[rgb(var(--secondary-container))]/20 rounded-xl border border-[rgb(var(--secondary-container))]/40"
               >
-                <AlertCircle className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
+                <AlertCircle className="w-5 h-5 text-[rgb(var(--secondary))] shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium text-blue-900 mb-1">
+                  <p className="text-sm font-medium text-[rgb(var(--on-secondary-container))] mb-1">
                     Verification Helps the Community
                   </p>
-                  <p className="text-xs text-blue-800">
+                  <p className="text-xs text-[rgb(var(--secondary))]">
                     Your verification will help other commuters trust this
                     route. Be honest about accuracy, fares, and safety
                     conditions.
@@ -227,7 +227,7 @@ export default function RouteVerificationFlow({
               <div className="flex gap-3 pt-4">
                 <button
                   onClick={onBack}
-                  className="flex-1 px-4 py-3 rounded-xl border-2 border-border text-foreground font-semibold hover:bg-muted transition-colors"
+                  className="flex-1 px-4 py-3 rounded-xl border-2 border-border text-foreground font-semibold hover:bg-[rgb(var(--surface-container))] transition-colors"
                 >
                   Back
                 </button>
@@ -248,7 +248,7 @@ export default function RouteVerificationFlow({
             <div className="sticky top-0 px-6 py-4 border-b border-border bg-background/95 backdrop-blur-sm flex items-center gap-3">
               <button
                 onClick={() => setStep("preview")}
-                className="p-2 hover:bg-muted rounded-lg transition-colors"
+                className="p-2 bg-[rgb(var(--surface-container-low))] hover:bg-[rgb(var(--surface-container))] rounded-lg transition-colors"
                 aria-label="Go back"
               >
                 <ArrowRight className="w-5 h-5 text-foreground rotate-180" />
@@ -290,7 +290,7 @@ export default function RouteVerificationFlow({
                         accuracyRating: parseInt(e.target.value),
                       })
                     }
-                    className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
+                    className="w-full h-2 bg-[rgb(var(--surface-container-low))] rounded-lg appearance-none cursor-pointer accent-primary"
                     aria-label="Route accuracy rating"
                   />
                   <div className="flex items-center justify-between">
@@ -389,7 +389,7 @@ export default function RouteVerificationFlow({
                       });
                       clearError("safetyRating");
                     }}
-                    className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
+                    className="w-full h-2 bg-[rgb(var(--surface-container-low))] rounded-lg appearance-none cursor-pointer accent-primary"
                     aria-label="Safety rating"
                   />
                   <div className="flex items-center justify-between">
@@ -451,14 +451,14 @@ export default function RouteVerificationFlow({
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="flex gap-3 p-4 bg-green-50 rounded-xl border border-green-200"
+                className="flex gap-3 p-4 bg-[rgb(var(--primary-container))]/15 rounded-xl border border-[rgb(var(--primary-container))]/30"
               >
-                <CheckCircle2 className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
+                <CheckCircle2 className="w-5 h-5 text-[rgb(var(--primary))] shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium text-green-900 mb-1">
+                  <p className="text-sm font-medium text-[rgb(var(--primary))] mb-1">
                     Earn +10 XP
                   </p>
-                  <p className="text-xs text-green-800">
+                  <p className="text-xs text-[rgb(var(--primary-container))]">
                     Verified verifications help the community trust routes.
                   </p>
                 </div>
@@ -469,7 +469,7 @@ export default function RouteVerificationFlow({
                 <button
                   onClick={() => setStep("preview")}
                   disabled={isLoading}
-                  className="flex-1 px-4 py-3 rounded-xl border-2 border-border text-foreground font-semibold hover:bg-muted transition-colors disabled:opacity-50"
+                  className="flex-1 px-4 py-3 rounded-xl border-2 border-border text-foreground font-semibold hover:bg-[rgb(var(--surface-container))] transition-colors disabled:opacity-50"
                 >
                   Back
                 </button>
@@ -502,8 +502,8 @@ export default function RouteVerificationFlow({
                 transition={{ type: "spring", stiffness: 100 }}
                 className="flex justify-center"
               >
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                  <CheckCircle2 className="w-8 h-8 text-green-600" />
+                <div className="w-16 h-16 bg-[rgb(var(--primary-container))]/20 rounded-full flex items-center justify-center">
+                  <CheckCircle2 className="w-8 h-8 text-[rgb(var(--primary))]" />
                 </div>
               </motion.div>
 
@@ -524,15 +524,15 @@ export default function RouteVerificationFlow({
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.4 }}
-                className="bg-blue-50 border border-blue-200 rounded-xl p-4 text-left"
+                className="bg-[rgb(var(--primary-container))]/15 border border-[rgb(var(--primary-container))]/30 rounded-xl p-4 text-left"
               >
-                <p className="text-sm text-blue-900 font-medium mb-2">
+                <p className="text-sm text-[rgb(var(--primary))] font-medium mb-2">
                   Route Verified ✓
                 </p>
-                <p className="text-sm text-blue-800">
+                <p className="text-sm text-[rgb(var(--primary-container))]">
                   {route.from} → {route.to}
                 </p>
-                <p className="text-xs text-blue-700 mt-2">
+                <p className="text-xs text-[rgb(var(--primary))] mt-2">
                   You&apos;ve earned +10 XP. Your verification will help
                   increase the confidence score for this route.
                 </p>

@@ -1,38 +1,38 @@
-'use client'
+"use client";
 
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { MapPin, ArrowRightLeft, Search } from 'lucide-react'
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { MapPin, ArrowRightLeft, Search } from "lucide-react";
 
 interface HeroSearchProps {
-  onSearch?: () => void
+  onSearch?: () => void;
 }
 
 export default function HeroSearch({ onSearch }: HeroSearchProps) {
-  const [from, setFrom] = useState('Mokola')
-  const [to, setTo] = useState('Moniya')
+  const [from, setFrom] = useState("Mokola");
+  const [to, setTo] = useState("Moniya");
 
   const quickRoutes = [
-    { from: 'Mokola', to: 'Ojoo' },
-    { from: 'UI', to: 'Ojoo' },
-    { from: 'Moniya', to: 'Dugbe' },
-    { from: 'Ojoo', to: 'Challenge' }
-  ]
+    { from: "Mokola", to: "Ojoo" },
+    { from: "UI", to: "Ojoo" },
+    { from: "Moniya", to: "Dugbe" },
+    { from: "Ojoo", to: "Challenge" },
+  ];
 
   const handleSwap = () => {
     [setFrom, setTo].forEach((setter, i) => {
-      setter(i === 0 ? to : from)
-    })
-  }
+      setter(i === 0 ? to : from);
+    });
+  };
 
   const handleSearch = () => {
-    onSearch?.()
-  }
+    onSearch?.();
+  };
 
-  const handleQuickRoute = (route: typeof quickRoutes[0]) => {
-    setFrom(route.from)
-    setTo(route.to)
-  }
+  const handleQuickRoute = (route: (typeof quickRoutes)[0]) => {
+    setFrom(route.from);
+    setTo(route.to);
+  };
 
   return (
     <motion.div
@@ -44,7 +44,7 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
       <div className="glass-card p-8 md:p-10">
         {/* Header */}
         <div className="text-center mb-8">
-          <h2 className="text-3xl md:text-4xl font-bold mb-2 text-pretty">
+          <h2 className="text-3xl md:text-4xl font-extrabold mb-2 text-[rgb(var(--on-surface))] leading-tight">
             Find Your Way Across The City
           </h2>
           <p className="text-muted-foreground text-lg">
@@ -56,7 +56,9 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
         <div className="space-y-4 mb-8">
           {/* From Input */}
           <motion.div whileFocus={{ scale: 1.02 }}>
-            <label className="block text-sm font-medium text-muted-foreground mb-2">From</label>
+            <label className="block text-sm font-medium text-muted-foreground mb-2">
+              From
+            </label>
             <div className="relative">
               <MapPin className="absolute left-4 top-3 w-5 h-5 text-primary/60" />
               <input
@@ -75,7 +77,7 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}
               onClick={handleSwap}
-              className="p-2 rounded-lg bg-primary/10 hover:bg-primary/20 text-primary transition-colors"
+              className="p-3 rounded-2xl bg-[rgb(var(--primary))]/10 hover:bg-[rgb(var(--primary))]/15 text-[rgb(var(--primary))] transition-colors shadow-[0_6px_18px_rgba(0,0,0,0.06)]"
             >
               <ArrowRightLeft className="w-5 h-5" />
             </motion.button>
@@ -83,7 +85,9 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
 
           {/* To Input */}
           <motion.div whileFocus={{ scale: 1.02 }}>
-            <label className="block text-sm font-medium text-muted-foreground mb-2">To</label>
+            <label className="block text-sm font-medium text-muted-foreground mb-2">
+              To
+            </label>
             <div className="relative">
               <MapPin className="absolute left-4 top-3 w-5 h-5 text-primary/60" />
               <input
@@ -102,13 +106,12 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={handleSearch}
-          className="w-full py-3 rounded-lg gradient-blue text-white font-semibold flex items-center justify-center gap-2 shadow-lg hover:shadow-xl transition-shadow smooth-transition glow-blue"
+          className="w-full py-4 rounded-2xl gradient-blue text-[rgb(var(--on-primary))] font-semibold flex items-center justify-center gap-3 shadow-[0_15px_35px_rgba(0,0,0,0.12)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] transition-shadow smooth-transition glow-blue"
         >
           <Search className="w-5 h-5" />
           Find Route
         </motion.button>
 
-        {/* Quick Routes */}
         <div className="mt-8 pt-8 border-t border-border/40">
           <p className="text-sm text-muted-foreground mb-4">Quick routes:</p>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
@@ -118,7 +121,7 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
                 whileHover={{ scale: 1.05, y: -2 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleQuickRoute(route)}
-                className="p-3 rounded-lg bg-card/50 hover:bg-card border border-border/40 hover:border-primary/40 transition-all text-sm font-medium text-foreground"
+                className="p-3 rounded-2xl bg-[rgb(var(--surface-container-low))] hover:bg-[rgb(var(--surface-container))] border border-[rgba(110,122,112,0.12)] hover:border-[rgb(var(--primary))] transition-all text-sm font-semibold text-[rgb(var(--on-surface))]"
               >
                 <span className="text-primary">{route.from}</span>
                 <span className="text-muted-foreground mx-1">→</span>
@@ -129,5 +132,5 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
         </div>
       </div>
     </motion.div>
-  )
+  );
 }

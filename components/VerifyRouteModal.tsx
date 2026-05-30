@@ -117,21 +117,21 @@ export default function VerifyRouteModal({
             className="fixed bottom-0 left-0 right-0 glass-card mx-auto rounded-t-3xl max-h-[90vh] overflow-hidden flex flex-col z-50"
           >
             {/* Header */}
-            <div className="sticky top-0 px-6 py-4 border-b border-border flex items-center justify-between bg-background/95 backdrop-blur-sm">
+            <div className="sticky top-0 px-6 py-4 border-b border-[rgba(110,122,112,0.12)] flex items-center justify-between bg-[rgb(var(--surface-container-lowest))]/95 backdrop-blur-sm">
               <div>
-                <h2 className="text-lg font-semibold text-foreground">
+                <h2 className="text-lg font-semibold text-[rgb(var(--on-surface))]">
                   Routes to Verify
                 </h2>
-                <p className="text-xs text-muted-foreground mt-0.5">
+                <p className="text-xs text-[rgb(var(--on-surface-variant))] mt-0.5">
                   Community-submitted routes needing verification
                 </p>
               </div>
               <button
                 onClick={onClose}
-                className="p-2 hover:bg-muted rounded-lg transition-colors"
+                className="p-2 bg-[rgb(var(--surface-container-low))] hover:bg-[rgb(var(--surface-container))] rounded-2xl transition-colors"
                 aria-label="close"
               >
-                <X className="w-5 h-5 text-foreground" />
+                <X className="w-5 h-5 text-[rgb(var(--on-surface))]" />
               </button>
             </div>
 
@@ -153,10 +153,10 @@ export default function VerifyRouteModal({
                   <button
                     key={option}
                     onClick={() => setSortBy(option as any)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+                    className={`px-3 py-1.5 rounded-2xl text-xs font-semibold transition-all ${
                       sortBy === option
-                        ? "bg-primary text-white"
-                        : "bg-muted text-foreground hover:bg-muted/80"
+                        ? "bg-[rgb(var(--primary))] text-white shadow-sm"
+                        : "bg-[rgb(var(--surface-container-low))] text-[rgb(var(--on-surface))] hover:bg-[rgb(var(--surface-container))]"
                     }`}
                   >
                     {option === "recent"
@@ -188,7 +188,7 @@ export default function VerifyRouteModal({
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: idx * 0.05 }}
                       onClick={() => onSelectRoute(route)}
-                      className="w-full p-4 glass-card hover:border-primary transition-all duration-200 text-left group"
+                      className="w-full p-4 glass-card hover:border-[rgb(var(--primary))] transition-all duration-200 text-left group"
                     >
                       {/* Route Header */}
                       <div className="flex items-start justify-between mb-2">
@@ -219,28 +219,28 @@ export default function VerifyRouteModal({
 
                       {/* Route Details */}
                       <div className="grid grid-cols-3 gap-2 mb-3">
-                        <div className="bg-muted/50 rounded-lg p-2">
-                          <p className="text-xs text-muted-foreground mb-0.5">
+                        <div className="bg-[rgb(var(--surface-container-low))] rounded-2xl p-3">
+                          <p className="text-xs text-[rgb(var(--on-surface-variant))] mb-1">
                             Fare
                           </p>
-                          <p className="font-semibold text-foreground text-sm">
+                          <p className="font-semibold text-[rgb(var(--on-surface))] text-sm">
                             {route.estimatedFare}
                           </p>
                         </div>
-                        <div className="bg-muted/50 rounded-lg p-2">
-                          <p className="text-xs text-muted-foreground mb-0.5">
+                        <div className="bg-[rgb(var(--surface-container-low))] rounded-2xl p-3">
+                          <p className="text-xs text-[rgb(var(--on-surface-variant))] mb-1">
                             Time
                           </p>
-                          <p className="font-semibold text-foreground text-sm flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
+                          <p className="font-semibold text-[rgb(var(--on-surface))] text-sm flex items-center gap-1">
+                            <Clock className="w-3 h-3 text-[rgb(var(--primary))]" />
                             {route.estimatedTime}
                           </p>
                         </div>
-                        <div className="bg-muted/50 rounded-lg p-2">
-                          <p className="text-xs text-muted-foreground mb-0.5">
+                        <div className="bg-[rgb(var(--surface-container-low))] rounded-2xl p-3">
+                          <p className="text-xs text-[rgb(var(--on-surface-variant))] mb-1">
                             Steps
                           </p>
-                          <p className="font-semibold text-foreground text-sm">
+                          <p className="font-semibold text-[rgb(var(--on-surface))] text-sm">
                             {route.steps}
                           </p>
                         </div>
@@ -249,7 +249,7 @@ export default function VerifyRouteModal({
                       {/* Contributor & Confidence */}
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center text-xs font-bold text-primary">
+                          <div className="w-7 h-7 rounded-full bg-[rgb(var(--primary))]/20 flex items-center justify-center text-xs font-bold text-[rgb(var(--primary))]">
                             {route.contributor[0]}
                           </div>
                           <div className="flex flex-col">
@@ -279,7 +279,7 @@ export default function VerifyRouteModal({
                             {route.confidence}%
                           </p>
                         </div>
-                        <div className="w-full h-1.5 bg-muted rounded-full overflow-hidden">
+                        <div className="w-full h-1.5 bg-[rgb(var(--surface-container))] rounded-full overflow-hidden">
                           <div
                             className="h-full bg-gradient-blue rounded-full transition-all duration-500"
                             style={{ width: `${route.confidence}%` }}

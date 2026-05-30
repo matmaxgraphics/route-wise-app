@@ -1,44 +1,86 @@
-'use client'
+"use client";
 
-import { motion, AnimatePresence } from 'framer-motion'
-import { X, MapPin } from 'lucide-react'
-import { useState } from 'react'
+import { motion, AnimatePresence } from "framer-motion";
+import { X, MapPin, Plus, Trash, Clock, DollarSign } from "lucide-react";
+import { useState } from "react";
 
-interface ContributionModalProps {
-  isOpen: boolean
-  onClose: () => void
+interface RouteStepInput {
+  title: string;
+  duration: string;
+  fare: string;
 }
 
-export default function ContributionModal({ isOpen, onClose }: ContributionModalProps) {
-  const [formData, setFormData] = useState({
-    from: '',
-    to: '',
-    instructions: '',
-    fareEstimate: '',
-    safetyTips: ''
-  })
+interface ContributionModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
+export default function ContributionModal({
+  isOpen,
+  onClose,
+}: ContributionModalProps) {
+  const [formData, setFormData] = useState({
+    from: "",
+    to: "",
+    routeSteps: [{ title: "", duration: "", fare: "" } as RouteStepInput],
+    fareEstimate: "",
+    safetyTips: "",
+  });
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleStepChange = (
+    index: number,
+    field: keyof RouteStepInput,
+    value: string,
+  ) => {
+    setFormData((prev) => {
+      const updatedSteps = [...prev.routeSteps];
+      updatedSteps[index] = { ...updatedSteps[index], [field]: value };
+      return { ...prev, routeSteps: updatedSteps };
+    });
+  };
+
+  const addRouteStep = () => {
+    setFormData((prev) => ({
+      ...prev,
+      routeSteps: [...prev.routeSteps, { title: "", duration: "", fare: "" }],
+    }));
+  };
+
+  const removeRouteStep = (index: number) => {
+    setFormData((prev) => {
+      const updatedSteps = prev.routeSteps.filter((_, i) => i !== index);
+      return {
+        ...prev,
+        routeSteps: updatedSteps.length
+          ? updatedSteps
+          : [{ title: "", duration: "", fare: "" }],
+      };
+    });
+  };
 
   const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     // Handle submission
-    console.log('Submitting:', formData)
-    onClose()
-  }
+    console.log("Submitting:", formData);
+    onClose();
+  };
 
   const backdropVariants = {
     hidden: { opacity: 0 },
-    show: { opacity: 1 }
-  }
+    show: { opacity: 1 },
+  };
 
   const modalVariants = {
     hidden: { opacity: 0, scale: 0.95, y: 20 },
-    show: { opacity: 1, scale: 1, y: 0 }
-  }
+    show: { opacity: 1, scale: 1, y: 0 },
+  };
 
   return (
     <AnimatePresence>
@@ -73,9 +115,9 @@ export default function ContributionModal({ isOpen, onClose }: ContributionModal
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={onClose}
-                  className="p-1.5 hover:bg-card rounded-lg transition-colors"
+                  className="p-2 bg-[rgb(var(--surface-container-low))] rounded-2xl hover:bg-[rgb(var(--surface-container))] transition-colors"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-5 h-5 text-[rgb(var(--on-surface))]" />
                 </motion.button>
               </div>
 
@@ -119,20 +161,108 @@ export default function ContributionModal({ isOpen, onClose }: ContributionModal
                   </div>
                 </div>
 
-                {/* Route Instructions */}
-                <div>
-                  <label className="block text-sm font-medium text-muted-foreground mb-2">
-                    Route Instructions
-                  </label>
-                  <textarea
-                    name="instructions"
-                    value={formData.instructions}
-                    onChange={handleInputChange}
-                    placeholder="Describe the route step-by-step..."
-                    rows={4}
-                    className="glass-input w-full p-4 resize-none"
-                    required
-                  />
+                {/* Route Steps */}
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <label className="block text-sm font-medium text-muted-foreground">
+                      Route Steps
+                    </label>
+                    <motion.button
+                      type="button"
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={addRouteStep}
+                      className="inline-flex items-center gap-2 text-sm font-semibold text-primary"
+                    >
+                      <Plus className="w-4 h-4" />
+                      Add Step
+                    </motion.button>
+                  </div>
+                  <div className="space-y-4">
+                    {formData.routeSteps.map((step, index) => (
+                      <div
+                        key={index}
+                        className="grid gap-3 p-4 rounded-3xl bg-[rgb(var(--surface-container-low))] border border-border/50"
+                      >
+                        <div className="flex items-center justify-between gap-4">
+                          <p className="text-sm font-semibold">
+                            Step {index + 1}
+                          </p>
+                          <motion.button
+                            type="button"
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            onClick={() => removeRouteStep(index)}
+                            className="inline-flex items-center gap-2 text-xs font-medium text-destructive"
+                          >
+                            <Trash className="w-4 h-4" />
+                            Remove
+                          </motion.button>
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-muted-foreground mb-1">
+                            Step Description
+                          </label>
+                          <input
+                            type="text"
+                            value={step.title}
+                            onChange={(e) =>
+                              handleStepChange(index, "title", e.target.value)
+                            }
+                            placeholder="What to do at this step"
+                            className="glass-input w-full px-4 py-3"
+                            required
+                          />
+                        </div>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                          <div>
+                            <label className="block text-xs font-medium text-muted-foreground mb-1">
+                              Duration
+                            </label>
+                            <div className="relative">
+                              <Clock className="absolute left-3 top-3 w-4 h-4 text-primary/60" />
+                              <input
+                                type="text"
+                                value={step.duration}
+                                onChange={(e) =>
+                                  handleStepChange(
+                                    index,
+                                    "duration",
+                                    e.target.value,
+                                  )
+                                }
+                                placeholder="e.g., 10 mins"
+                                className="glass-input w-full pl-10 pr-4 py-3"
+                                required
+                              />
+                            </div>
+                          </div>
+                          <div>
+                            <label className="block text-xs font-medium text-muted-foreground mb-1">
+                              Fare Estimate
+                            </label>
+                            <div className="relative">
+                              <DollarSign className="absolute left-3 top-3 w-4 h-4 text-primary/60" />
+                              <input
+                                type="text"
+                                value={step.fare}
+                                onChange={(e) =>
+                                  handleStepChange(
+                                    index,
+                                    "fare",
+                                    e.target.value,
+                                  )
+                                }
+                                placeholder="e.g., ₦200"
+                                className="glass-input w-full pl-10 pr-4 py-3"
+                                required
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Fare Estimate */}
@@ -171,14 +301,18 @@ export default function ContributionModal({ isOpen, onClose }: ContributionModal
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   type="submit"
-                  className="w-full py-3 rounded-lg gradient-blue text-white font-semibold shadow-lg hover:shadow-xl transition-shadow glow-blue mt-6"
+                  className="w-full py-3 rounded-2xl gradient-blue text-[rgb(var(--on-primary))] font-semibold shadow-[0_15px_35px_rgba(0,0,0,0.12)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.12)] transition-shadow glow-blue mt-6"
                 >
                   Submit Route
                 </motion.button>
 
                 {/* Reward Note */}
-                <p className="text-xs text-center text-muted-foreground bg-card/50 p-3 rounded-lg">
-                  ✨ Earn <span className="text-primary font-semibold">+20 XP</span> when this route is verified
+                <p className="text-xs text-center text-[rgb(var(--on-surface))] bg-[rgb(var(--secondary-container))]/15 p-3 rounded-2xl border border-[rgb(var(--secondary-container))]/30">
+                  ✨ Earn{" "}
+                  <span className="text-[rgb(var(--secondary-container))] font-semibold">
+                    +20 XP
+                  </span>{" "}
+                  when this route is verified
                 </p>
               </form>
             </motion.div>
@@ -186,5 +320,5 @@ export default function ContributionModal({ isOpen, onClose }: ContributionModal
         </>
       )}
     </AnimatePresence>
-  )
+  );
 }
