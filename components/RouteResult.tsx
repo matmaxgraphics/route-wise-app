@@ -1,56 +1,51 @@
 "use client";
 
 import { motion } from "framer-motion";
-import {
-  Navigation,
-  MapPin,
-  Clock,
-  BadgeCheck,
-  Zap,
-  Shield,
-} from "lucide-react";
+import { Navigation, MapPin, Bus, Car, Bike, Zap, Shield } from "lucide-react";
+import type { RouteSearchResult } from "@/lib/types";
+import ShimmerLoader from "@/components/ShimmerLoader";
 
-export default function RouteResult() {
-  const steps = [
-    {
-      id: 1,
-      title: "Walk to Mokola roundabout",
-      duration: "5 mins",
-      fareRange: null,
-      icon: Navigation,
-    },
-    {
-      id: 2,
-      title: "Take taxi to UI gate",
-      duration: "15 mins",
-      fareRange: "₦200–₦300",
-      icon: MapPin,
-    },
-    {
-      id: 3,
-      title: "Board cab to Ojoo",
-      duration: "12 mins",
-      fareRange: "₦150–₦200",
-      icon: MapPin,
-    },
-    {
-      id: 4,
-      title: "Take bus to Moniya",
-      duration: "8 mins",
-      fareRange: "₦200",
-      icon: MapPin,
-    },
-  ];
+interface RouteResultProps {
+  route: RouteSearchResult | null;
+  isLoading?: boolean;
+}
+
+const TRANSPORT_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+  walk: Navigation,
+  cab: Car,
+  bus: Bus,
+  motorbike: Bike,
+  other: MapPin,
+};
+
+function formatFare(min: number, max: number) {
+  if (min === 0 && max === 0) return "TBD";
+  if (min === max) return `₦${min}`;
+  return `₦${min}–₦${max}`;
+}
+
+export default function RouteResult({ route, isLoading }: RouteResultProps) {
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="glass-card p-8">
+          <ShimmerLoader />
+        </div>
+        <div className="glass-card p-8">
+          <ShimmerLoader />
+        </div>
+      </div>
+    );
+  }
+
+  if (!route) return null;
+
+  const totalFare = formatFare(route.totalFareMin, route.totalFareMax);
+  const qualityLevel = Math.min(Math.round((route.confidenceScore / 100) * 5), 5);
 
   const containerVariants = {
     hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.1,
-        delayChildren: 0.2,
-      },
-    },
+    show: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } },
   };
 
   const itemVariants = {
@@ -68,39 +63,29 @@ export default function RouteResult() {
       {/* Header with Stats */}
       <div className="glass-card p-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-          {/* Total Fare */}
           <div className="text-center p-4 rounded-2xl bg-[rgb(var(--surface-container-low))]">
             <p className="text-[rgb(var(--on-surface-variant))] text-sm mb-1">
               Estimated Total Fare
             </p>
-            <p className="text-2xl font-bold text-[rgb(var(--primary))]">
-              ₦500–₦700
+            <p className="text-2xl font-bold text-[rgb(var(--primary))]">{totalFare}</p>
+          </div>
+
+          <div className="text-center p-4 rounded-2xl bg-[rgb(var(--surface-container-low))]">
+            <p className="text-[rgb(var(--on-surface-variant))] text-sm mb-1">Travel Time</p>
+            <p className="text-2xl font-bold">
+              {route.totalDuration > 0 ? `${route.totalDuration} mins` : "TBD"}
             </p>
           </div>
 
-          {/* Travel Time */}
           <div className="text-center p-4 rounded-2xl bg-[rgb(var(--surface-container-low))]">
-            <p className="text-[rgb(var(--on-surface-variant))] text-sm mb-1">
-              Travel Time
-            </p>
-            <p className="text-2xl font-bold">35–50 mins</p>
-          </div>
-
-          {/* Confidence Score */}
-          <div className="text-center p-4 rounded-2xl bg-[rgb(var(--surface-container-low))]">
-            <p className="text-[rgb(var(--on-surface-variant))] text-sm mb-1">
-              Confidence
-            </p>
+            <p className="text-[rgb(var(--on-surface-variant))] text-sm mb-1">Confidence</p>
             <p className="text-2xl font-bold text-[rgb(var(--secondary-container))]">
-              92% Verified
+              {route.confidenceScore}% Verified
             </p>
           </div>
 
-          {/* Route Quality */}
           <div className="text-center p-4 rounded-2xl bg-[rgb(var(--surface-container-low))]">
-            <p className="text-[rgb(var(--on-surface-variant))] text-sm mb-1">
-              Route Quality
-            </p>
+            <p className="text-[rgb(var(--on-surface-variant))] text-sm mb-1">Route Quality</p>
             <div className="flex gap-1 justify-center">
               {[...Array(5)].map((_, i) => (
                 <motion.div
@@ -108,31 +93,36 @@ export default function RouteResult() {
                   initial={{ scale: 0 }}
                   animate={{ scale: 1 }}
                   transition={{ delay: i * 0.1 }}
-                  className={`w-2 h-2 rounded-full ${i < 4 ? "bg-[rgb(var(--primary))]" : "bg-[rgb(var(--outline))]"}`}
+                  className={`w-2 h-2 rounded-full ${
+                    i < qualityLevel
+                      ? "bg-[rgb(var(--primary))]"
+                      : "bg-[rgb(var(--outline))]"
+                  }`}
                 />
               ))}
             </div>
           </div>
         </div>
 
-        {/* Badge Section */}
         <div className="flex flex-wrap gap-2">
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="px-3 py-1.5 rounded-full bg-[rgb(var(--secondary-container))]/15 border border-[rgb(var(--secondary-container))]/30 flex items-center gap-1.5"
-          >
-            <Zap className="w-4 h-4 text-[rgb(var(--secondary-container))]" />
-            <span className="text-sm font-semibold text-[rgb(var(--secondary-container))]">
-              Fastest
-            </span>
-          </motion.div>
+          {route.confidenceScore >= 80 && (
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="px-3 py-1.5 rounded-full bg-[rgb(var(--secondary-container))]/15 border border-[rgb(var(--secondary-container))]/30 flex items-center gap-1.5"
+            >
+              <Zap className="w-4 h-4 text-[rgb(var(--secondary-container))]" />
+              <span className="text-sm font-semibold text-[rgb(var(--secondary-container))]">
+                Fastest
+              </span>
+            </motion.div>
+          )}
           <motion.div
             whileHover={{ scale: 1.05 }}
             className="px-3 py-1.5 rounded-full bg-[rgb(var(--primary))]/12 border border-[rgb(var(--primary))]/25 flex items-center gap-1.5"
           >
             <Shield className="w-4 h-4 text-[rgb(var(--primary))]" />
             <span className="text-sm font-semibold text-[rgb(var(--primary))]">
-              Most Reliable
+              Community Verified
             </span>
           </motion.div>
         </div>
@@ -145,45 +135,39 @@ export default function RouteResult() {
         animate="show"
         className="glass-card p-8"
       >
-        <h3 className="text-xl font-bold mb-6">Route Steps</h3>
+        <h3 className="text-xl font-bold mb-6">
+          Route Steps · {route.from} → {route.to}
+        </h3>
         <div className="space-y-2">
-          {steps.map((step, idx) => {
-            const IconComponent = step.icon;
+          {route.steps.map((step, idx) => {
+            const IconComponent = TRANSPORT_ICONS[step.transportType] ?? MapPin;
+            const stepFare = formatFare(step.fareMin, step.fareMax);
             return (
-              <motion.div
-                key={step.id}
-                variants={itemVariants}
-                className="flex gap-4"
-              >
-                {/* Step Indicator */}
+              <motion.div key={step.id} variants={itemVariants} className="flex gap-4">
                 <div className="flex flex-col items-center">
                   <motion.div
                     whileHover={{ scale: 1.15 }}
-                    className="w-10 h-10 rounded-full bg-[rgb(var(--primary))] flex items-center justify-center text-white font-semibold text-sm flex-0 shadow-[0_8px_20px_rgba(0,0,0,0.08)]"
+                    className="w-10 h-10 rounded-full bg-[rgb(var(--primary))] flex items-center justify-center text-white font-semibold text-sm shrink-0 shadow-[0_8px_20px_rgba(0,0,0,0.08)]"
                   >
-                    {step.id}
+                    {step.stepOrder}
                   </motion.div>
-                  {idx < steps.length - 1 && (
+                  {idx < route.steps.length - 1 && (
                     <div className="w-1 h-12 bg-[rgb(var(--primary))]/40 my-2 rounded-full" />
                   )}
                 </div>
 
-                {/* Step Content */}
                 <div className="flex-1 pb-4">
                   <div className="flex items-start justify-between mb-1">
-                    <h4 className="font-semibold text-foreground">
-                      {step.title}
-                    </h4>
-                    {step.fareRange && (
-                      <span className="text-sm font-medium text-primary bg-primary/10 px-2 py-1 rounded-md">
-                        {step.fareRange}
+                    <div className="flex items-center gap-2">
+                      <IconComponent className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
+                      <h4 className="font-semibold text-foreground">{step.instruction}</h4>
+                    </div>
+                    {stepFare !== "TBD" && (
+                      <span className="text-sm font-medium text-primary bg-primary/10 px-2 py-1 rounded-md shrink-0 ml-2">
+                        {stepFare}
                       </span>
                     )}
                   </div>
-                  {/* <div className="flex items-center gap-1.5 text-muted-foreground text-sm">
-                    <Clock className="w-4 h-4" />
-                    <span>{step.duration}</span>
-                  </div> */}
                 </div>
               </motion.div>
             );

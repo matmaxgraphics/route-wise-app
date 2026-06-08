@@ -2,67 +2,32 @@
 
 import { motion } from "framer-motion";
 import { Trophy, Crown, Flame } from "lucide-react";
+import type { LeaderboardEntry } from "@/lib/types";
+import ShimmerLoader from "@/components/ShimmerLoader";
 
-export default function Leaderboard() {
-  const topContributors = [
-    {
-      rank: 1,
-      name: "Adeniyi",
-      title: "Mayor of Mokola",
-      xp: 3420,
-      avatar: "👨‍💼",
-      territory: "Mokola",
-    },
-    {
-      rank: 2,
-      name: "Zainab",
-      title: "Guardian of Ojoo",
-      xp: 2890,
-      avatar: "👩‍🔬",
-      territory: "Ojoo",
-    },
-    {
-      rank: 3,
-      name: "Chukwu",
-      title: "Voice of Moniya",
-      xp: 2540,
-      avatar: "👨‍🎓",
-      territory: "Moniya",
-    },
-    {
-      rank: 4,
-      name: "Amara",
-      title: "Path Explorer",
-      xp: 2100,
-      avatar: "👩‍💼",
-      territory: "UI/Dugbe",
-    },
-    {
-      rank: 5,
-      name: "Tunde",
-      title: "Route Master",
-      xp: 1850,
-      avatar: "👨‍🚀",
-      territory: "Central",
-    },
-  ];
+interface LeaderboardProps {
+  contributors?: LeaderboardEntry[] | null;
+  userRank?: number | null;
+  userXp?: number | null;
+  isLoading?: boolean;
+}
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.08,
-        delayChildren: 0.2,
-      },
-    },
-  };
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.2 } },
+};
 
-  const itemVariants = {
-    hidden: { opacity: 0, x: -20 },
-    show: { opacity: 1, x: 0, transition: { duration: 0.3 } },
-  };
+const itemVariants = {
+  hidden: { opacity: 0, x: -20 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.3 } },
+};
 
+export default function Leaderboard({
+  contributors,
+  userRank,
+  userXp,
+  isLoading,
+}: LeaderboardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -75,76 +40,91 @@ export default function Leaderboard() {
         Top Contributors
       </h3>
 
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="show"
-        className="space-y-3"
-      >
-        {topContributors.map((contributor) => (
-          <motion.div
-            key={contributor.rank}
-            variants={itemVariants}
-            whileHover={{ scale: 1.02, x: 4 }}
-            className="p-4 rounded-2xl bg-[rgb(var(--surface-container-low))] border border-[rgba(110,122,112,0.12)] hover:border-[rgb(var(--primary))] transition-all"
-          >
-            <div className="flex items-center gap-4">
-              {/* Rank Badge */}
-              <div className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-[0_0_0_5px_rgba(252,212,0,0.15)] bg-[rgb(var(--secondary-container))]">
-                {contributor.rank === 1 ? (
-                  <Crown className="w-5 h-5" />
-                ) : (
-                  contributor.rank
-                )}
-              </div>
+      {isLoading ? (
+        <ShimmerLoader />
+      ) : contributors && contributors.length > 0 ? (
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          animate="show"
+          className="space-y-3"
+        >
+          {contributors.map((contributor) => (
+            <motion.div
+              key={contributor.id}
+              variants={itemVariants}
+              whileHover={{ scale: 1.02, x: 4 }}
+              className="p-4 rounded-2xl bg-[rgb(var(--surface-container-low))] border border-[rgba(110,122,112,0.12)] hover:border-[rgb(var(--primary))] transition-all"
+            >
+              <div className="flex items-center gap-4">
+                <div className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-[0_0_0_5px_rgba(252,212,0,0.15)] bg-[rgb(var(--secondary-container))]">
+                  {contributor.rank === 1 ? (
+                    <Crown className="w-5 h-5" />
+                  ) : (
+                    contributor.rank
+                  )}
+                </div>
 
-              {/* Avatar & Info */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-2xl">{contributor.avatar}</span>
-                  <div className="min-w-0">
-                    <p className="font-semibold text-foreground truncate">
-                      {contributor.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground truncate">
-                      {contributor.title}
-                    </p>
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-2 mb-1">
+                    <div className="w-8 h-8 rounded-full bg-[rgb(var(--primary))]/15 flex items-center justify-center text-sm font-bold text-[rgb(var(--primary))]">
+                      {contributor.username[0]?.toUpperCase()}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-semibold text-foreground truncate">{contributor.username}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {contributor.contributionCount} routes
+                      </p>
+                    </div>
                   </div>
                 </div>
-                <p className="text-xs text-muted-foreground">
-                  Territory: {contributor.territory}
-                </p>
-              </div>
 
-              {/* XP & Flame */}
-              <div className="shrink-0 text-right">
-                <div className="flex items-center justify-end gap-1.5 mb-1">
-                  {contributor.rank <= 3 && (
-                    <Flame className="w-4 h-4 text-[rgb(var(--secondary-container))]" />
-                  )}
-                  <p className="font-bold text-[rgb(var(--primary))]">
-                    {contributor.xp}
-                  </p>
+                <div className="shrink-0 text-right">
+                  <div className="flex items-center justify-end gap-1.5 mb-1">
+                    {contributor.rank <= 3 && (
+                      <Flame className="w-4 h-4 text-[rgb(var(--secondary-container))]" />
+                    )}
+                    <p className="font-bold text-[rgb(var(--primary))]">
+                      {contributor.xp.toLocaleString()}
+                    </p>
+                  </div>
+                  <p className="text-xs text-muted-foreground">XP</p>
                 </div>
-                <p className="text-xs text-muted-foreground">XP</p>
               </div>
-            </div>
-          </motion.div>
-        ))}
-      </motion.div>
+            </motion.div>
+          ))}
+        </motion.div>
+      ) : (
+        <div className="text-center py-8 text-muted-foreground">
+          <Trophy className="w-10 h-10 mx-auto mb-3 opacity-30" />
+          <p className="text-sm">No contributors yet. Be the first!</p>
+        </div>
+      )}
 
-      {/* Leaderboard Footer */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="mt-6 pt-6 border-t border-[rgba(110,122,112,0.16)]"
-      >
-        <p className="text-sm text-muted-foreground text-center">
-          You are ranked <span className="text-primary font-bold">#247</span>{" "}
-          globally with <span className="text-primary font-bold">740 XP</span>
-        </p>
-      </motion.div>
+      {(userRank !== undefined && userRank !== null) || (userXp !== undefined && userXp !== null) ? (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.5 }}
+          className="mt-6 pt-6 border-t border-[rgba(110,122,112,0.16)]"
+        >
+          <p className="text-sm text-muted-foreground text-center">
+            {userRank !== null && userRank !== undefined && (
+              <>
+                You are ranked{" "}
+                <span className="text-primary font-bold">#{userRank}</span>{" "}
+                globally
+              </>
+            )}
+            {userXp !== null && userXp !== undefined && (
+              <>
+                {userRank !== null && userRank !== undefined ? " with " : "You have "}
+                <span className="text-primary font-bold">{userXp.toLocaleString()} XP</span>
+              </>
+            )}
+          </p>
+        </motion.div>
+      ) : null}
     </motion.div>
   );
 }

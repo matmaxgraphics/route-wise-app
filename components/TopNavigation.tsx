@@ -1,28 +1,41 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Bell, User, LogOut, UserPlus } from "lucide-react";
+import { Bell, LogOut, UserPlus, Sun, Moon } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { useTheme } from "next-themes";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function TopNavigation() {
   const { user, isAuthenticated, signOut } = useAuth();
+  const { theme, setTheme } = useTheme();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
   const router = useRouter();
 
   const handleLogout = async () => {
-    await signOut();
-    setShowProfileMenu(false);
-    router.push("/");
+    setIsSigningOut(true);
+    try {
+      await signOut();
+      setShowProfileMenu(false);
+      toast.success("Signed out");
+      router.push("/");
+    } catch {
+      toast.error("Unable to sign out");
+    } finally {
+      setIsSigningOut(false);
+    }
   };
   return (
     <motion.nav
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.4 }}
-      className="sticky top-0 z-40 bg-[rgba(247,250,248,0.92)] backdrop-blur-xl border-b border-[rgba(110,122,112,0.12)]"
+      className="sticky top-0 z-40 backdrop-blur-xl border-b border-[rgba(var(--outline-variant),0.2)]"
+      style={{ backgroundColor: "rgb(var(--surface) / 0.92)" }}
     >
       <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
@@ -37,6 +50,22 @@ export default function TopNavigation() {
 
         {/* Right Section */}
         <div className="flex items-center gap-4">
+          {/* Theme Toggle */}
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            className="p-2 rounded-2xl bg-[rgb(var(--surface-container-low))] hover:bg-[rgb(var(--surface-container))] transition-colors"
+            aria-label="Toggle theme"
+            type="button"
+          >
+            {theme === "dark" ? (
+              <Sun className="w-5 h-5 text-[rgb(var(--secondary-container))]" />
+            ) : (
+              <Moon className="w-5 h-5 text-[rgb(var(--on-surface-variant))]" />
+            )}
+          </motion.button>
+
           {isAuthenticated && (
             <>
               {/* Notification Bell */}
@@ -44,6 +73,8 @@ export default function TopNavigation() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 className="relative p-2 rounded-2xl bg-[rgb(var(--surface-container-low))] hover:bg-[rgb(var(--surface-container))] transition-colors"
+                aria-label="Notifications"
+                type="button"
               >
                 <Bell className="w-5 h-5 text-[rgb(var(--primary))] transition-colors" />
                 <span className="absolute top-1 right-1 w-2 h-2 bg-[rgb(var(--secondary-container))] rounded-full animate-pulse" />
@@ -55,6 +86,8 @@ export default function TopNavigation() {
                   whileHover={{ scale: 1.05 }}
                   onClick={() => setShowProfileMenu(!showProfileMenu)}
                   className="w-10 h-10 rounded-full bg-gradient-to-br from-[rgb(var(--primary))]/90 via-[rgb(var(--inverse-primary))]/80 to-[rgb(var(--secondary-container))]/90 flex items-center justify-center border-2 border-[rgba(0,107,63,0.24)] cursor-pointer relative"
+                  aria-label="Open profile menu"
+                  type="button"
                 >
                   <span className="text-white font-bold text-xs">
                     {user?.email?.[0].toUpperCase() || "U"}
@@ -80,10 +113,12 @@ export default function TopNavigation() {
                     <motion.button
                       whileHover={{ backgroundColor: "#f5f5f5" }}
                       onClick={handleLogout}
+                      disabled={isSigningOut}
                       className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-card flex items-center gap-2 transition-colors border-t border-border"
+                      type="button"
                     >
                       <LogOut className="w-4 h-4" />
-                      Sign Out
+                      {isSigningOut ? "Signing out..." : "Sign Out"}
                     </motion.button>
                   </motion.div>
                 )}

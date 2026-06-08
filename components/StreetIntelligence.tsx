@@ -3,30 +3,29 @@
 import { motion } from "framer-motion";
 import { AlertCircle, Info, Shield } from "lucide-react";
 
-export default function StreetIntelligence() {
-  const tips = [
-    {
-      type: "warning",
-      icon: AlertCircle,
-      title: "Hold your phone securely",
-      location: "near Iwo Road",
-      color: "text-[rgb(var(--secondary-container))]",
-    },
-    {
-      type: "info",
-      icon: Info,
-      title: "Keep small cash ready",
-      location: "at Ojoo park",
-      color: "text-[rgb(var(--primary))]",
-    },
-    {
-      type: "warning",
-      icon: AlertCircle,
-      title: "Drivers may increase fares",
-      location: "after 7PM",
-      color: "text-[rgb(var(--secondary-container))]",
-    },
-  ];
+const DEFAULT_TIPS = [
+  { type: "warning", icon: AlertCircle, title: "Hold your phone securely", location: "near Iwo Road", color: "text-[rgb(var(--secondary-container))]" },
+  { type: "info", icon: Info, title: "Keep small cash ready", location: "at Ojoo park", color: "text-[rgb(var(--primary))]" },
+  { type: "warning", icon: AlertCircle, title: "Drivers may increase fares", location: "after 7PM", color: "text-[rgb(var(--secondary-container))]" },
+];
+
+interface StreetIntelligenceProps {
+  tips?: Array<{ content: string; severity: string }>;
+  verificationCount?: number;
+}
+
+export default function StreetIntelligence({ tips: rawTips, verificationCount }: StreetIntelligenceProps) {
+  const tips = rawTips?.length
+    ? rawTips.map((t) => ({
+        type: t.severity === "warning" ? "warning" : "info",
+        icon: t.severity === "warning" ? AlertCircle : Info,
+        title: t.content,
+        location: "",
+        color: t.severity === "warning"
+          ? "text-[rgb(var(--secondary-container))]"
+          : "text-[rgb(var(--primary))]",
+      }))
+    : DEFAULT_TIPS;
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -90,9 +89,9 @@ export default function StreetIntelligence() {
                 <div className="flex-1">
                   <p className="font-medium text-foreground">{tip.title}</p>
 
-                  <p className="text-sm text-muted-foreground">
-                    {tip.location}
-                  </p>
+                  {tip.location && (
+                    <p className="text-sm text-muted-foreground">{tip.location}</p>
+                  )}
                 </div>
               </div>
             </motion.div>
@@ -112,7 +111,9 @@ export default function StreetIntelligence() {
         <div>
           <p className="text-sm font-medium text-foreground">
             Verified by{" "}
-            <span className="text-primary font-bold">18 locals</span>
+            <span className="text-primary font-bold">
+              {verificationCount !== undefined ? verificationCount : 18} locals
+            </span>
           </p>
 
           <p className="text-xs text-muted-foreground">

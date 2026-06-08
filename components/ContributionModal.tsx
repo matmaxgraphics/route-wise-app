@@ -3,29 +3,32 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { X, MapPin, Plus, Trash, Clock, DollarSign } from "lucide-react";
 import { useState } from "react";
-
-interface RouteStepInput {
-  title: string;
-  duration: string;
-  fare: string;
-}
+import { useAuth } from "@/lib/auth-context";
+import { createClient } from "@/lib/supabase/client";
+import { createRouteWithSteps } from "@/lib/supabase/queries";
+import type { RouteStepInput } from "@/lib/types";
+import { toast } from "sonner";
 
 interface ContributionModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSuccess?: () => void;
 }
 
 export default function ContributionModal({
   isOpen,
   onClose,
+  onSuccess,
 }: ContributionModalProps) {
+  const { user } = useAuth();
   const [formData, setFormData] = useState({
     from: "",
     to: "",
     routeSteps: [{ title: "", duration: "", fare: "" } as RouteStepInput],
-    fareEstimate: "",
     safetyTips: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -65,11 +68,56 @@ export default function ContributionModal({
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle submission
-    console.log("Submitting:", formData);
-    onClose();
+    setSubmitError(null);
+
+    if (!user?.id) {
+      setSubmitError("You must be signed in to submit a route.");
+      toast.error("Sign in required", {
+        description: "Please sign in before submitting a route.",
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
+    const loadingToast = toast.loading("Submitting route...");
+
+    const supabase = createClient();
+    const { routeId, error } = await createRouteWithSteps(supabase, {
+      createdBy: user.id,
+      from: formData.from,
+      to: formData.to,
+      routeSteps: formData.routeSteps,
+      safetyTips: formData.safetyTips,
+    });
+
+    setIsSubmitting(false);
+    toast.dismiss(loadingToast);
+
+    if (error) {
+      setSubmitError(
+        error.message ?? "Unable to submit route. Please try again.",
+      );
+      toast.error("Route submission failed", {
+        description:
+          error.message ?? "Unable to submit route. Please try again.",
+      });
+      return;
+    }
+
+    if (routeId) {
+      setFormData({
+        from: "",
+        to: "",
+        routeSteps: [{ title: "", duration: "", fare: "" }],
+        safetyTips: "",
+      });
+      toast.success("Route submitted", {
+        description: "Your route is now pending community verification.",
+      });
+      onSuccess ? onSuccess() : onClose();
+    }
   };
 
   const backdropVariants = {
@@ -92,7 +140,7 @@ export default function ContributionModal({
             initial="hidden"
             animate="show"
             exit="hidden"
-            onClick={onClose}
+            onClick={isSubmitting ? undefined : onClose}
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40"
           />
 
@@ -115,7 +163,10 @@ export default function ContributionModal({
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={onClose}
-                  className="p-2 bg-[rgb(var(--surface-container-low))] rounded-2xl hover:bg-[rgb(var(--surface-container))] transition-colors"
+                  disabled={isSubmitting}
+                  className="p-2 bg-[rgb(var(--surface-container-low))] rounded-2xl hover:bg-[rgb(var(--surface-container))] transition-colors disabled:opacity-50"
+                  aria-label="Close contribution form"
+                  type="button"
                 >
                   <X className="w-5 h-5 text-[rgb(var(--on-surface))]" />
                 </motion.button>
@@ -137,6 +188,7 @@ export default function ContributionModal({
                       onChange={handleInputChange}
                       placeholder="Starting point"
                       className="glass-input w-full pl-10 pr-4 py-3"
+                      disabled={isSubmitting}
                       required
                     />
                   </div>
@@ -156,6 +208,7 @@ export default function ContributionModal({
                       onChange={handleInputChange}
                       placeholder="Destination"
                       className="glass-input w-full pl-10 pr-4 py-3"
+                      disabled={isSubmitting}
                       required
                     />
                   </div>
@@ -172,6 +225,7 @@ export default function ContributionModal({
                       whileHover={{ scale: 1.02 }}
                       whileTap={{ scale: 0.98 }}
                       onClick={addRouteStep}
+                      disabled={isSubmitting}
                       className="inline-flex items-center gap-2 text-sm font-semibold text-primary"
                     >
                       <Plus className="w-4 h-4" />
@@ -193,6 +247,7 @@ export default function ContributionModal({
                             whileHover={{ scale: 1.05 }}
                             whileTap={{ scale: 0.95 }}
                             onClick={() => removeRouteStep(index)}
+                            disabled={isSubmitting}
                             className="inline-flex items-center gap-2 text-xs font-medium text-destructive"
                           >
                             <Trash className="w-4 h-4" />
@@ -211,6 +266,7 @@ export default function ContributionModal({
                             }
                             placeholder="What to do at this step"
                             className="glass-input w-full px-4 py-3"
+                            disabled={isSubmitting}
                             required
                           />
                         </div>
@@ -233,6 +289,7 @@ export default function ContributionModal({
                                 }
                                 placeholder="e.g., 10 mins"
                                 className="glass-input w-full pl-10 pr-4 py-3"
+                                disabled={isSubmitting}
                                 required
                               />
                             </div>
@@ -255,6 +312,7 @@ export default function ContributionModal({
                                 }
                                 placeholder="e.g., ₦200"
                                 className="glass-input w-full pl-10 pr-4 py-3"
+                                disabled={isSubmitting}
                                 required
                               />
                             </div>
@@ -263,22 +321,6 @@ export default function ContributionModal({
                       </div>
                     ))}
                   </div>
-                </div>
-
-                {/* Fare Estimate */}
-                <div>
-                  <label className="block text-sm font-medium text-muted-foreground mb-2">
-                    Estimated Fare (₦)
-                  </label>
-                  <input
-                    type="text"
-                    name="fareEstimate"
-                    value={formData.fareEstimate}
-                    onChange={handleInputChange}
-                    placeholder="e.g., 500-700"
-                    className="glass-input w-full px-4 py-3"
-                    required
-                  />
                 </div>
 
                 {/* Safety Tips */}
@@ -293,17 +335,25 @@ export default function ContributionModal({
                     placeholder="Any safety tips for this route..."
                     rows={3}
                     className="glass-input w-full p-4 resize-none"
+                    disabled={isSubmitting}
                   />
                 </div>
+
+                {submitError && (
+                  <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+                    {submitError}
+                  </div>
+                )}
 
                 {/* Submit Button */}
                 <motion.button
                   whileHover={{ scale: 1.02 }}
                   whileTap={{ scale: 0.98 }}
                   type="submit"
-                  className="w-full py-3 rounded-2xl gradient-blue text-[rgb(var(--on-primary))] font-semibold shadow-[0_15px_35px_rgba(0,0,0,0.12)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.12)] transition-shadow glow-blue mt-6"
+                  disabled={isSubmitting}
+                  className="w-full py-3 rounded-2xl gradient-blue text-[rgb(var(--on-primary))] font-semibold shadow-[0_15px_35px_rgba(0,0,0,0.12)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.12)] transition-shadow glow-blue mt-6 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
-                  Submit Route
+                  {isSubmitting ? "Submitting..." : "Submit Route"}
                 </motion.button>
 
                 {/* Reward Note */}

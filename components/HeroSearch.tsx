@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import { MapPin, ArrowRightLeft, Search } from "lucide-react";
+import { toast } from "sonner";
 
 interface HeroSearchProps {
-  onSearch?: () => void;
+  onSearch?: (from: string, to: string) => void;
 }
 
 export default function HeroSearch({ onSearch }: HeroSearchProps) {
@@ -26,7 +27,14 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
   };
 
   const handleSearch = () => {
-    onSearch?.();
+    if (!from.trim() || !to.trim()) {
+      toast.error("Enter both locations", {
+        description: "Add a starting point and destination to find a route.",
+      });
+      return;
+    }
+
+    onSearch?.(from.trim(), to.trim());
   };
 
   const handleQuickRoute = (route: (typeof quickRoutes)[0]) => {
@@ -78,6 +86,8 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
               whileTap={{ scale: 0.9 }}
               onClick={handleSwap}
               className="p-3 rounded-2xl bg-[rgb(var(--primary))]/10 hover:bg-[rgb(var(--primary))]/15 text-[rgb(var(--primary))] transition-colors shadow-[0_6px_18px_rgba(0,0,0,0.06)]"
+              aria-label="Swap start and destination"
+              type="button"
             >
               <ArrowRightLeft className="w-5 h-5" />
             </motion.button>
@@ -107,6 +117,7 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
           whileTap={{ scale: 0.98 }}
           onClick={handleSearch}
           className="w-full py-4 rounded-2xl gradient-blue text-[rgb(var(--on-primary))] font-semibold flex items-center justify-center gap-3 shadow-[0_15px_35px_rgba(0,0,0,0.12)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] transition-shadow smooth-transition glow-blue"
+          type="button"
         >
           <Search className="w-5 h-5" />
           Find Route
@@ -122,6 +133,7 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
                 whileTap={{ scale: 0.95 }}
                 onClick={() => handleQuickRoute(route)}
                 className="p-3 rounded-2xl bg-[rgb(var(--surface-container-low))] hover:bg-[rgb(var(--surface-container))] border border-[rgba(110,122,112,0.12)] hover:border-[rgb(var(--primary))] transition-all text-sm font-semibold text-[rgb(var(--on-surface))]"
+                type="button"
               >
                 <span className="text-primary">{route.from}</span>
                 <span className="text-muted-foreground mx-1">→</span>

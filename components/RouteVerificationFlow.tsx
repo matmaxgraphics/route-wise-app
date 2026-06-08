@@ -2,6 +2,10 @@
 
 import { useState } from "react";
 import type { RouteToVerify } from "@/lib/types";
+import { useAuth } from "@/lib/auth-context";
+import { createClient } from "@/lib/supabase/client";
+import { submitRouteVerification } from "@/lib/supabase/queries";
+import { toast } from "sonner";
 import { motion } from "framer-motion";
 import {
   AlertCircle,
@@ -38,6 +42,8 @@ export default function RouteVerificationFlow({
     "preview",
   );
   const [isLoading, setIsLoading] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+  const { user } = useAuth();
   const [formState, setFormState] = useState<VerificationFormState>({
     accuracyRating: 75,
     fareAccuracy: "",
@@ -64,19 +70,58 @@ export default function RouteVerificationFlow({
       return;
     }
 
-    setIsLoading(true);
-
-    setTimeout(() => {
-      setIsLoading(false);
-      setStep("success");
-      onSuccess({
-        routeId: route.id,
-        accuracyRating: formState.accuracyRating,
-        fareAccuracy: formState.fareAccuracy,
-        safetyRating: formState.safetyRating,
-        safetyTips: formState.safetyTips,
+    if (!user?.id) {
+      setSubmitError("You must be signed in to verify a route.");
+      toast.error("Sign in required", {
+        description: "Please sign in before verifying a route.",
       });
-    }, 1500);
+      return;
+    }
+
+    setIsLoading(true);
+    setSubmitError(null);
+    const loadingToast = toast.loading("Submitting verification...");
+
+    const voteType =
+      formState.safetyRating < 40
+        ? "unsafe"
+        : formState.accuracyRating < 40
+          ? "wrong"
+          : formState.accuracyRating < 70
+            ? "outdated"
+            : "accurate";
+
+    const supabase = createClient();
+    const { error } = await submitRouteVerification(supabase, {
+      routeId: route.id,
+      userId: user.id,
+      voteType,
+      safetyTips: formState.safetyTips,
+    });
+
+    setIsLoading(false);
+    toast.dismiss(loadingToast);
+
+    if (error) {
+      setSubmitError(error.message || "Unable to submit verification.");
+      toast.error("Verification failed", {
+        description: error.message || "Unable to submit verification.",
+      });
+      return;
+    }
+
+    toast.success("Verification submitted", {
+      description: "Thanks for helping the community trust this route.",
+    });
+    setStep("success");
+    onSuccess({
+      routeId: route.id,
+      accuracyRating: formState.accuracyRating,
+      fareAccuracy: formState.fareAccuracy,
+      safetyRating: formState.safetyRating,
+      safetyTips: formState.safetyTips,
+      voteType,
+    });
   };
 
   const clearError = (field: string) => {
@@ -284,6 +329,7 @@ export default function RouteVerificationFlow({
                     min="0"
                     max="100"
                     value={formState.accuracyRating}
+                    disabled={isLoading}
                     onChange={(e) =>
                       setFormState({
                         ...formState,
@@ -340,6 +386,7 @@ export default function RouteVerificationFlow({
                         name="fareAccuracy"
                         value={option.value}
                         checked={formState.fareAccuracy === option.value}
+                        disabled={isLoading}
                         onChange={(e) => {
                           setFormState({
                             ...formState,
@@ -382,6 +429,7 @@ export default function RouteVerificationFlow({
                     min="0"
                     max="100"
                     value={formState.safetyRating}
+                    disabled={isLoading}
                     onChange={(e) => {
                       setFormState({
                         ...formState,
@@ -430,6 +478,7 @@ export default function RouteVerificationFlow({
                 <textarea
                   id="safetyTips"
                   value={formState.safetyTips}
+                  disabled={isLoading}
                   onChange={(e) =>
                     setFormState({
                       ...formState,
@@ -463,6 +512,12 @@ export default function RouteVerificationFlow({
                   </p>
                 </div>
               </motion.div>
+
+              {submitError && (
+                <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+                  {submitError}
+                </div>
+              )}
 
               {/* Action Buttons */}
               <div className="flex gap-3 pt-4">

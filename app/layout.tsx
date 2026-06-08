@@ -1,20 +1,14 @@
 import type { Metadata, Viewport } from "next";
-import { Plus_Jakarta_Sans, Geist_Mono } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import { AuthProvider } from "@/lib/auth-context";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "sonner";
 import "./globals.css";
-
-const plusJakarta = Plus_Jakarta_Sans({
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
-const _geistMono = Geist_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "RouteWise - Community Transport Navigation",
   description:
     "Find verified routes, fares, and street tips across Nigerian cities",
-  generator: "v0.app",
   icons: {
     icon: [
       {
@@ -48,14 +42,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        className={`${plusJakarta.variable} font-sans antialiased bg-background text-foreground`}
-      >
-        <AuthProvider>
-          {children}
-          {process.env.NODE_ENV === "production" && <Analytics />}
-        </AuthProvider>
+    <html lang="en" suppressHydrationWarning>
+      <body className="font-sans antialiased bg-background text-foreground">
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <AuthProvider>
+            {children}
+            <Toaster richColors position="top-center" />
+            {process.env.NODE_ENV === "production" && <Analytics />}
+          </AuthProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

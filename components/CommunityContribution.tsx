@@ -2,29 +2,60 @@
 
 import { motion } from "framer-motion";
 import { Award, Star, Lock, Plus } from "lucide-react";
+import type { UserProfile } from "@/lib/types";
 
 interface CommunityContributionProps {
   onContributeClick: () => void;
   onVerifyClick: () => void;
+  profile?: UserProfile | null;
+  isLoading?: boolean;
 }
+
+const LEVEL_THRESHOLDS = [
+  { name: "Route Scout", min: 0, max: 999 },
+  { name: "Route Commander", min: 1000, max: 2499 },
+  { name: "Area Guide", min: 2500, max: 4999 },
+  { name: "Street Legend", min: 5000, max: Infinity },
+];
+
+function getLevelInfo(xp: number) {
+  const idx = LEVEL_THRESHOLDS.findIndex((l) => xp >= l.min && xp <= l.max);
+  const level = LEVEL_THRESHOLDS[Math.max(idx, 0)];
+  const next = LEVEL_THRESHOLDS[Math.max(idx, 0) + 1] ?? null;
+  const progressXP = xp - level.min;
+  const levelRange = next ? next.min - level.min : 1;
+  return {
+    name: level.name,
+    nextName: next?.name ?? null,
+    progressXP,
+    levelRange,
+    xpToNext: next ? next.min - xp : 0,
+  };
+}
+
+const ALL_BADGES = [
+  { id: 1, name: "First Ride", icon: "🚌", unlock: (p: UserProfile) => p.contributionCount >= 1 },
+  { id: 2, name: "Fare Whisperer", icon: "💰", unlock: (p: UserProfile) => p.contributionCount >= 3 },
+  { id: 3, name: "Street Guardian", icon: "🛡️", unlock: (p: UserProfile) => p.contributionCount >= 5 },
+  { id: 4, name: "Area Commander", icon: "🗺️", unlock: (p: UserProfile) => p.contributionCount >= 10 },
+  { id: 5, name: "City Explorer", icon: "🌍", unlock: (p: UserProfile) => p.xp >= 2500 },
+  { id: 6, name: "Master Scout", icon: "👑", unlock: (p: UserProfile) => p.xp >= 5000 },
+];
 
 export default function CommunityContribution({
   onContributeClick,
   onVerifyClick,
+  profile,
+  isLoading,
 }: CommunityContributionProps) {
-  const xp = 740;
-  const maxXp = 1000;
-  const level = "Route Scout";
-  const xpPercentage = (xp / maxXp) * 100;
+  const xp = profile?.xp ?? 0;
+  const levelInfo = getLevelInfo(xp);
+  const xpPercentage = Math.min((levelInfo.progressXP / levelInfo.levelRange) * 100, 100);
 
-  const badges = [
-    { id: 1, name: "First Ride", icon: "🚌", unlocked: true },
-    { id: 2, name: "Fare Whisperer", icon: "💰", unlocked: true },
-    { id: 3, name: "Street Guardian", icon: "🛡️", unlocked: true },
-    { id: 4, name: "Area Commander", icon: "🗺️", unlocked: false },
-    { id: 5, name: "City Explorer", icon: "🌍", unlocked: false },
-    { id: 6, name: "Master Scout", icon: "👑", unlocked: false },
-  ];
+  const badges = ALL_BADGES.map((b) => ({
+    ...b,
+    unlocked: profile ? b.unlock(profile) : false,
+  }));
 
   return (
     <motion.div
@@ -38,19 +69,17 @@ export default function CommunityContribution({
         <div className="mb-6">
           <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between mb-2">
             <h3 className="text-xl font-bold text-[rgb(var(--on-surface))]">
-              Level: {level}
+              Level: {levelInfo.name}
             </h3>
             <div className="text-sm text-[rgb(var(--on-surface-variant))]">
-              <span className="text-[rgb(var(--primary))] font-bold">{xp}</span>{" "}
-              / {maxXp} XP
+              <span className="text-[rgb(var(--primary))] font-bold">{xp.toLocaleString()}</span> XP
             </div>
           </div>
 
-          {/* Progress Bar */}
           <div className="w-full h-3 rounded-full bg-[rgb(var(--surface-container))] overflow-hidden border border-[rgba(110,122,112,0.18)]">
             <motion.div
               initial={{ width: 0 }}
-              animate={{ width: `${xpPercentage}%` }}
+              animate={{ width: isLoading ? "0%" : `${xpPercentage}%` }}
               transition={{ duration: 1, ease: "easeOut" }}
               className="h-full gradient-blue rounded-full glow-blue"
             />
@@ -58,7 +87,9 @@ export default function CommunityContribution({
         </div>
 
         <p className="text-sm text-muted-foreground">
-          {Math.round(1000 - xp)} XP until Route Commander status
+          {levelInfo.nextName
+            ? `${levelInfo.xpToNext.toLocaleString()} XP until ${levelInfo.nextName}`
+            : "Max level reached!"}
         </p>
       </div>
 
@@ -84,12 +115,8 @@ export default function CommunityContribution({
               }`}
             >
               <div className="text-3xl mb-2">{badge.icon}</div>
-              <p className="text-xs md:text-sm font-medium text-foreground mb-1">
-                {badge.name}
-              </p>
-              {!badge.unlocked && (
-                <Lock className="w-3 h-3 mx-auto text-muted-foreground" />
-              )}
+              <p className="text-xs md:text-sm font-medium text-foreground mb-1">{badge.name}</p>
+              {!badge.unlocked && <Lock className="w-3 h-3 mx-auto text-muted-foreground" />}
             </motion.div>
           ))}
         </div>
@@ -127,8 +154,8 @@ export default function CommunityContribution({
       >
         <p className="text-sm text-foreground">
           <span className="font-semibold text-primary">💡 Tip:</span> Earn{" "}
-          <span className="text-primary font-bold">+20 XP</span> when your
-          contributed route is verified by 3+ community members
+          <span className="text-primary font-bold">+10 XP</span> for each route
+          contribution and verification
         </p>
       </motion.div>
     </motion.div>

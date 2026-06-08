@@ -28,7 +28,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         } = await supabase.auth.getUser()
         setUser(user)
       } catch (error) {
-        console.error('[v0] Error getting user:', error)
+        console.error('Error getting user:', error)
       } finally {
         setIsLoading(false)
       }
