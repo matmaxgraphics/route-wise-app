@@ -298,6 +298,7 @@ export async function fetchPendingRoutes(
 type LocationRow = { id: string; name: string };
 type RouteRow = {
   id: string;
+  status: string | null;
   confidence_score: number | null;
   average_duration: number | null;
   source_location: { name: string } | { name: string }[] | null;
@@ -327,7 +328,7 @@ export async function searchRoutes(
   const { data: route, error: routeError } = await supabase
     .from("routes")
     .select(
-      "id, confidence_score, average_duration, source_location:source_location_id(name), destination_location:destination_location_id(name), route_steps(id, step_order, instruction, transport_type, fare_min, fare_max), safety_tips(id, content, severity)",
+      "id, status, confidence_score, average_duration, source_location:source_location_id(name), destination_location:destination_location_id(name), route_steps(id, step_order, instruction, transport_type, fare_min, fare_max), safety_tips(id, content, severity)",
     )
     .in("source_location_id", fromIds)
     .in("destination_location_id", toIds)
@@ -362,6 +363,7 @@ export async function searchRoutes(
       id: r.id,
       from: fromName ?? from,
       to: toName ?? to,
+      status: r.status ?? "pending",
       totalFareMin,
       totalFareMax,
       totalDuration: r.average_duration ?? 0,
@@ -402,22 +404,26 @@ export async function getUserProfile(
 export async function getLeaderboard(
   supabase: SupabaseClient,
   currentUserId?: string,
-): Promise<{ data: LeaderboardEntry[] | null; userRank: number | null; error: PostgrestError | null }> {
+  limit = 10,
+  offset = 0,
+): Promise<{ data: LeaderboardEntry[] | null; userRank: number | null; hasMore: boolean; error: PostgrestError | null }> {
   const { data, error } = await supabase
     .from("profiles")
     .select("id, username, xp, contribution_count")
     .order("xp", { ascending: false })
-    .limit(10);
+    .range(offset, offset + limit - 1);
 
-  if (error) return { data: null, userRank: null, error };
+  if (error) return { data: null, userRank: null, hasMore: false, error };
 
   const entries: LeaderboardEntry[] = (data ?? []).map((row, idx) => ({
-    rank: idx + 1,
+    rank: offset + idx + 1,
     id: row.id,
     username: row.username ?? "Unknown",
     xp: row.xp ?? 0,
     contributionCount: row.contribution_count ?? 0,
   }));
+
+  const hasMore = (data?.length ?? 0) === limit;
 
   let userRank: number | null = null;
   if (currentUserId) {
@@ -440,7 +446,7 @@ export async function getLeaderboard(
     }
   }
 
-  return { data: entries, userRank, error: null };
+  return { data: entries, userRank, hasMore, error: null };
 }
 
 export async function awardXP(

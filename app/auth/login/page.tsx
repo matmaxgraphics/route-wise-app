@@ -135,10 +135,10 @@ export default function LoginPage() {
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                className="flex items-start gap-2 p-3 rounded-lg bg-red-50 border border-red-200"
+                className="flex items-start gap-2 p-3 rounded-lg bg-[rgb(var(--error))]/10 border border-[rgb(var(--error))]/30"
               >
-                <AlertCircle className="w-4 h-4 text-red-600 shrink-0 mt-0.5" />
-                <p className="text-sm text-red-600">{error}</p>
+                <AlertCircle className="w-4 h-4 text-[rgb(var(--error))] shrink-0 mt-0.5" />
+                <p className="text-sm text-[rgb(var(--error))]">{error}</p>
               </motion.div>
             )}
 

@@ -58,6 +58,7 @@ export interface RouteSearchResult {
   id: string;
   from: string;
   to: string;
+  status: string;
   totalFareMin: number;
   totalFareMax: number;
   totalDuration: number;

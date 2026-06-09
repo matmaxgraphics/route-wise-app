@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Navigation, MapPin, Bus, Car, Bike, Zap, Shield } from "lucide-react";
+import { Navigation, MapPin, Bus, Car, Bike, Zap, Shield, AlertTriangle, Clock } from "lucide-react";
 import type { RouteSearchResult } from "@/lib/types";
 import ShimmerLoader from "@/components/ShimmerLoader";
 
@@ -60,6 +60,39 @@ export default function RouteResult({ route, isLoading }: RouteResultProps) {
       transition={{ duration: 0.5, delay: 0.2 }}
       className="space-y-6"
     >
+      {/* Status banners */}
+      {route.status === "flagged" && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-start gap-3 p-4 rounded-2xl bg-[rgb(var(--error))]/10 border border-[rgb(var(--error))]/30"
+        >
+          <AlertTriangle className="w-5 h-5 text-[rgb(var(--error))] shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-semibold text-[rgb(var(--error))]">Safety Concern Flagged</p>
+            <p className="text-xs text-[rgb(var(--error))]/80 mt-0.5">
+              Community members have flagged this route for safety concerns. Proceed with caution.
+            </p>
+          </div>
+        </motion.div>
+      )}
+
+      {route.status === "pending" && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-start gap-3 p-4 rounded-2xl bg-[rgb(var(--outline-variant))]/20 border border-[rgb(var(--outline-variant))]/40"
+        >
+          <Clock className="w-5 h-5 text-[rgb(var(--on-surface-variant))] shrink-0 mt-0.5" />
+          <div>
+            <p className="text-sm font-semibold text-[rgb(var(--on-surface-variant))]">Pending Verification</p>
+            <p className="text-xs text-[rgb(var(--on-surface-variant))]/80 mt-0.5">
+              This route hasn't been verified by the community yet. Help verify it to improve accuracy!
+            </p>
+          </div>
+        </motion.div>
+      )}
+
       {/* Header with Stats */}
       <div className="glass-card p-8">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">

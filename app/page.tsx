@@ -68,6 +68,9 @@ export default function Home() {
   const [leaderboard, setLeaderboard] = useState<LeaderboardEntry[] | null>(null);
   const [userRank, setUserRank] = useState<number | null>(null);
   const [profileLoading, setProfileLoading] = useState(false);
+  const [leaderboardHasMore, setLeaderboardHasMore] = useState(false);
+  const [leaderboardOffset, setLeaderboardOffset] = useState(0);
+  const [leaderboardLoadingMore, setLeaderboardLoadingMore] = useState(false);
 
   // Settings edit state
   const [editingSettings, setEditingSettings] = useState(false);
@@ -86,6 +89,8 @@ export default function Home() {
     if (leaderboardResult.data) {
       setLeaderboard(leaderboardResult.data);
       setUserRank(leaderboardResult.userRank);
+      setLeaderboardHasMore(leaderboardResult.hasMore);
+      setLeaderboardOffset(10);
     }
     setProfileLoading(false);
   }, [user?.id]);
@@ -138,6 +143,19 @@ export default function Home() {
     setTimeout(() => setShowVerifyModal(false), 3000);
   };
 
+  const handleLoadMore = async () => {
+    if (!user?.id || leaderboardLoadingMore) return;
+    setLeaderboardLoadingMore(true);
+    const supabase = createClient();
+    const result = await getLeaderboard(supabase, user.id, 10, leaderboardOffset);
+    if (result.data) {
+      setLeaderboard((prev) => [...(prev ?? []), ...result.data!]);
+      setLeaderboardHasMore(result.hasMore);
+      setLeaderboardOffset((prev) => prev + 10);
+    }
+    setLeaderboardLoadingMore(false);
+  };
+
   const handleOpenSettings = () => {
     setSettingsForm({ username: userProfile?.username ?? "", city: userProfile?.city ?? "" });
     setEditingSettings(true);
@@ -159,6 +177,7 @@ export default function Home() {
   };
 
   const levelInfo = userProfile ? getLevelInfo(userProfile.xp) : null;
+  const xpRingProgress = levelInfo ? Math.min(levelInfo.progressXP / levelInfo.levelRange, 1) : 0;
   const badges = ALL_BADGES.map((b) => ({
     ...b,
     unlocked: userProfile ? b.unlock(userProfile) : false,
@@ -166,7 +185,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col">
-      <TopNavigation />
+      <TopNavigation xpProgress={xpRingProgress} />
 
       <main className="flex-1 overflow-y-auto pb-20 md:pb-0">
         <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
@@ -223,6 +242,9 @@ export default function Home() {
                   userRank={userRank}
                   userXp={userProfile?.xp ?? null}
                   isLoading={profileLoading}
+                  hasMore={leaderboardHasMore}
+                  loadingMore={leaderboardLoadingMore}
+                  onLoadMore={handleLoadMore}
                 />
               </>
             </AuthGuard>

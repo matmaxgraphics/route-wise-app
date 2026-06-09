@@ -9,7 +9,11 @@ import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
-export default function TopNavigation() {
+interface TopNavigationProps {
+  xpProgress?: number; // 0–1
+}
+
+export default function TopNavigation({ xpProgress = 0 }: TopNavigationProps) {
   const { user, isAuthenticated, signOut } = useAuth();
   const { theme, setTheme } = useTheme();
   const [showProfileMenu, setShowProfileMenu] = useState(false);
@@ -124,45 +128,39 @@ export default function TopNavigation() {
                 )}
 
                 {/* XP Ring Progress */}
-                <svg
-                  className="absolute -inset-1 w-12 h-12"
-                  viewBox="0 0 24 24"
-                  style={{ transform: "rotate(-90deg)" }}
-                >
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    fill="none"
-                    stroke="rgba(37, 99, 255, 0.2)"
-                    strokeWidth="0.5"
-                  />
-                  <motion.circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    fill="none"
-                    stroke="url(#gradient)"
-                    strokeWidth="0.5"
-                    strokeDasharray={`${2 * Math.PI * 10}`}
-                    strokeDashoffset={`${2 * Math.PI * 10 * 0.26}`}
-                    initial={{ strokeDashoffset: 2 * Math.PI * 10 }}
-                    animate={{ strokeDashoffset: 2 * Math.PI * 10 * 0.26 }}
-                    transition={{ duration: 1.5 }}
-                  />
-                  <defs>
-                    <linearGradient
-                      id="gradient"
-                      x1="0%"
-                      y1="0%"
-                      x2="100%"
-                      y2="100%"
+                {(() => {
+                  const circumference = 2 * Math.PI * 10;
+                  const dashOffset = circumference * (1 - Math.min(xpProgress, 1));
+                  return (
+                    <svg
+                      className="absolute -inset-1 w-12 h-12"
+                      viewBox="0 0 24 24"
+                      style={{ transform: "rotate(-90deg)", color: "rgb(var(--primary))" }}
                     >
-                      <stop offset="0%" stopColor="#2563FF" />
-                      <stop offset="100%" stopColor="#3B82F6" />
-                    </linearGradient>
-                  </defs>
-                </svg>
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        fill="none"
+                        strokeWidth="0.5"
+                        style={{ stroke: "rgb(var(--outline-variant) / 0.35)" }}
+                      />
+                      <motion.circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="0.5"
+                        strokeLinecap="round"
+                        strokeDasharray={circumference}
+                        initial={{ strokeDashoffset: circumference }}
+                        animate={{ strokeDashoffset: dashOffset }}
+                        transition={{ duration: 1.5, ease: "easeOut" }}
+                      />
+                    </svg>
+                  );
+                })()}
               </div>
             </>
           )}

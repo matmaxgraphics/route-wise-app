@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Trophy, Crown, Flame } from "lucide-react";
+import { Trophy, Crown, Flame, ChevronDown, Loader2 } from "lucide-react";
 import type { LeaderboardEntry } from "@/lib/types";
 import ShimmerLoader from "@/components/ShimmerLoader";
 
@@ -10,6 +10,9 @@ interface LeaderboardProps {
   userRank?: number | null;
   userXp?: number | null;
   isLoading?: boolean;
+  hasMore?: boolean;
+  loadingMore?: boolean;
+  onLoadMore?: () => void;
 }
 
 const containerVariants = {
@@ -27,6 +30,9 @@ export default function Leaderboard({
   userRank,
   userXp,
   isLoading,
+  hasMore,
+  loadingMore,
+  onLoadMore,
 }: LeaderboardProps) {
   return (
     <motion.div
@@ -99,6 +105,23 @@ export default function Leaderboard({
           <Trophy className="w-10 h-10 mx-auto mb-3 opacity-30" />
           <p className="text-sm">No contributors yet. Be the first!</p>
         </div>
+      )}
+
+      {hasMore && onLoadMore && !isLoading && (
+        <motion.button
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={onLoadMore}
+          disabled={loadingMore}
+          className="w-full mt-4 py-2.5 rounded-2xl border border-[rgb(var(--outline-variant))]/40 text-sm font-semibold text-[rgb(var(--on-surface-variant))] hover:bg-[rgb(var(--surface-container-low))] transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {loadingMore ? (
+            <Loader2 className="w-4 h-4 animate-spin" />
+          ) : (
+            <ChevronDown className="w-4 h-4" />
+          )}
+          {loadingMore ? "Loading..." : "Load more"}
+        </motion.button>
       )}
 
       {(userRank !== undefined && userRank !== null) || (userXp !== undefined && userXp !== null) ? (
