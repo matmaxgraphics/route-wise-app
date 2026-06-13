@@ -222,6 +222,7 @@ type PendingRouteRow = {
   average_duration: number | null;
   created_by: string | null;
   created_at: string | null;
+  creator: { username: string | null } | { username: string | null }[] | null;
   source_location: { name: string } | { name: string }[] | null;
   destination_location: { name: string } | { name: string }[] | null;
   route_steps:
@@ -238,6 +239,16 @@ const getLocationName = (
   }
 
   return location?.name;
+};
+
+const getContributorName = (
+  creator: PendingRouteRow["creator"],
+): string | undefined => {
+  if (Array.isArray(creator)) {
+    return creator[0]?.username ?? undefined;
+  }
+
+  return creator?.username ?? undefined;
 };
 
 const formatFareRange = (steps: NonNullable<PendingRouteRow["route_steps"]>) => {
@@ -261,7 +272,7 @@ export async function fetchPendingRoutes(
   const { data, error } = await supabase
     .from("routes")
     .select(
-      "id, source_location_id, destination_location_id, confidence_score, average_duration, status, created_by, created_at, source_location:source_location_id(name), destination_location:destination_location_id(name), route_steps(step_order, fare_min, fare_max), route_votes(id)",
+      "id, source_location_id, destination_location_id, confidence_score, average_duration, status, created_by, created_at, creator:created_by(username), source_location:source_location_id(name), destination_location:destination_location_id(name), route_steps(step_order, fare_min, fare_max), route_votes(id)",
     )
     .eq("status", "pending")
     .order("created_at", { ascending: false });
@@ -276,7 +287,7 @@ export async function fetchPendingRoutes(
     to:
       getLocationName(route.destination_location) ??
       route.destination_location_id,
-    contributor: route.created_by ?? "Unknown",
+    contributor: getContributorName(route.creator) ?? "Unknown",
     contributorLevel: "Route Scout",
     estimatedFare: route.route_steps?.length
       ? formatFareRange(route.route_steps)
@@ -386,7 +397,56 @@ export async function getUserProfile(
     .maybeSingle();
 
   if (error) return { data: null, error };
-  if (!data) return { data: null, error: null };
+
+  if (!data) {
+    const { data: authData } = await supabase.auth.getUser();
+    const currentUser = authData?.user;
+
+    let defaultUsername = "user_" + userId.slice(0, 5);
+    let displayName = "";
+
+    if (currentUser && currentUser.id === userId) {
+      if (currentUser.email) {
+        defaultUsername = currentUser.email.split("@")[0];
+      }
+      displayName = currentUser.user_metadata?.display_name || currentUser.user_metadata?.username || "";
+    }
+
+    const { data: newProfile, error: insertError } = await supabase
+      .from("profiles")
+      .insert([
+        {
+          id: userId,
+          username: displayName || defaultUsername,
+          xp: 0,
+          level: 1,
+          contribution_count: 0,
+          city: "Ibadan",
+        },
+      ])
+      .select("id, username, xp, level, contribution_count, city")
+      .maybeSingle();
+
+    if (insertError) {
+      return { data: null, error: insertError };
+    }
+
+    if (!newProfile) {
+      return { data: null, error: null };
+    }
+
+    return {
+      data: {
+        id: newProfile.id,
+        username: newProfile.username ?? "Unknown",
+        xp: Number(newProfile.xp ?? 0),
+        level: Number(newProfile.level ?? 1),
+        contributionCount: Number(newProfile.contribution_count ?? 0),
+        city: newProfile.city ?? "Ibadan",
+      },
+      error: null,
+    };
+  }
 
   return {
     data: {
@@ -440,7 +500,7 @@ export async function getLeaderboard(
         const { count } = await supabase
           .from("profiles")
           .select("id", { count: "exact", head: true })
-          .gt("xp", profile.xp);
+          .gt("xp", profile.xp ?? 0);
         userRank = (count ?? 0) + 1;
       }
     }

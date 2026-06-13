@@ -18,8 +18,13 @@ const TRANSPORT_ICONS: Record<string, React.ComponentType<{ className?: string }
   other: MapPin,
 };
 
-function formatFare(min: number, max: number) {
-  if (min === 0 && max === 0) return "TBD";
+function formatFare(min: number | null | undefined, max: number | null | undefined) {
+  const hasMin = typeof min === "number" && min > 0;
+  const hasMax = typeof max === "number" && max > 0;
+
+  if (!hasMin && !hasMax) return "TBD";
+  if (hasMin && !hasMax) return `₦${min}`;
+  if (!hasMin && hasMax) return `₦${max}`;
   if (min === max) return `₦${min}`;
   return `₦${min}–₦${max}`;
 }

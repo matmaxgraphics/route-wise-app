@@ -125,9 +125,11 @@ export default function RouteVerificationFlow({
   };
 
   const clearError = (field: string) => {
-    const newErrors = { ...formState.errors };
-    delete newErrors[field];
-    setFormState({ ...formState, errors: newErrors });
+    setFormState((prev) => {
+      const newErrors = { ...prev.errors };
+      delete newErrors[field];
+      return { ...prev, errors: newErrors };
+    });
   };
 
   return (
@@ -388,10 +390,10 @@ export default function RouteVerificationFlow({
                         checked={formState.fareAccuracy === option.value}
                         disabled={isLoading}
                         onChange={(e) => {
-                          setFormState({
-                            ...formState,
+                          setFormState((prev) => ({
+                            ...prev,
                             fareAccuracy: e.target.value as any,
-                          });
+                          }));
                           clearError("fareAccuracy");
                         }}
                         className="w-4 h-4 accent-primary"
@@ -431,10 +433,10 @@ export default function RouteVerificationFlow({
                     value={formState.safetyRating}
                     disabled={isLoading}
                     onChange={(e) => {
-                      setFormState({
-                        ...formState,
+                      setFormState((prev) => ({
+                        ...prev,
                         safetyRating: parseInt(e.target.value),
-                      });
+                      }));
                       clearError("safetyRating");
                     }}
                     className="w-full h-2 bg-[rgb(var(--surface-container-low))] rounded-lg appearance-none cursor-pointer accent-primary"

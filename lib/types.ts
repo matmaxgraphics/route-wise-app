@@ -50,8 +50,8 @@ export interface RouteStep {
   stepOrder: number;
   instruction: string;
   transportType: string;
-  fareMin: number;
-  fareMax: number;
+  fareMin: number | null;
+  fareMax: number | null;
 }
 
 export interface RouteSearchResult {
@@ -59,8 +59,8 @@ export interface RouteSearchResult {
   from: string;
   to: string;
   status: string;
-  totalFareMin: number;
-  totalFareMax: number;
+  totalFareMin: number | null;
+  totalFareMax: number | null;
   totalDuration: number;
   confidenceScore: number;
   steps: RouteStep[];
