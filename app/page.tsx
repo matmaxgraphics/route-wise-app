@@ -2,11 +2,12 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { motion } from "framer-motion";
-import { MapPin, Award, Settings, Check, X } from "lucide-react";
+import { MapPin, Award, Settings, Check, X, LogOut } from "lucide-react";
 import type { RouteToVerify, RouteSearchResult, UserProfile, LeaderboardEntry } from "@/lib/types";
 import { createClient } from "@/lib/supabase/client";
 import { searchRoutes, getUserProfile, getLeaderboard, awardXP, updateProfile } from "@/lib/supabase/queries";
 import { useAuth } from "@/lib/auth-context";
+import { toast } from "sonner";
 import TopNavigation from "@/components/TopNavigation";
 import HeroSearch from "@/components/HeroSearch";
 import RouteResult from "@/components/RouteResult";
@@ -54,7 +55,24 @@ const ALL_BADGES = [
 ];
 
 export default function Home() {
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
+  const [isSigningOut, setIsSigningOut] = useState(false);
+
+  const handleSignOut = async () => {
+    setIsSigningOut(true);
+    try {
+      await signOut();
+      toast.success("Signed out successfully");
+      setUserProfile(null);
+      setSearchResult(null);
+      setSearchState("idle");
+      setActiveTab("explore");
+    } catch {
+      toast.error("Unable to sign out");
+    } finally {
+      setIsSigningOut(false);
+    }
+  };
 
   const [activeTab, setActiveTab] = useState<"explore" | "contribute" | "profile">("explore");
   const [showContributeModal, setShowContributeModal] = useState(false);
@@ -444,16 +462,29 @@ export default function Home() {
                         </div>
                       </div>
                     ) : (
-                      <div className="space-y-3">
-                        {[
-                          { label: "Display Name", value: userProfile.username },
-                          { label: "City", value: userProfile.city },
-                        ].map((item) => (
-                          <div key={item.label} className="flex items-center justify-between p-3 rounded-xl bg-[rgb(var(--surface-container-low))]">
-                            <span className="text-sm text-muted-foreground">{item.label}</span>
-                            <span className="text-sm font-semibold text-foreground">{item.value}</span>
-                          </div>
-                        ))}
+                      <div className="space-y-4">
+                        <div className="space-y-3">
+                          {[
+                            { label: "Display Name", value: userProfile.username },
+                            { label: "City", value: userProfile.city },
+                          ].map((item) => (
+                            <div key={item.label} className="flex items-center justify-between p-3 rounded-xl bg-[rgb(var(--surface-container-low))]">
+                              <span className="text-sm text-muted-foreground">{item.label}</span>
+                              <span className="text-sm font-semibold text-foreground">{item.value}</span>
+                            </div>
+                          ))}
+                        </div>
+
+                        <motion.button
+                          whileHover={{ scale: 1.01 }}
+                          whileTap={{ scale: 0.99 }}
+                          onClick={handleSignOut}
+                          disabled={isSigningOut}
+                          className="w-full mt-4 py-3 rounded-xl border border-[rgb(var(--error))]/30 bg-[rgb(var(--error))]/5 hover:bg-[rgb(var(--error))]/10 text-[rgb(var(--error))] font-semibold flex items-center justify-center gap-2 transition-colors disabled:opacity-50"
+                        >
+                          <LogOut className="w-4 h-4" />
+                          {isSigningOut ? "Signing out..." : "Sign Out"}
+                        </motion.button>
                       </div>
                     )}
                   </motion.div>

@@ -115,13 +115,14 @@ export default function TopNavigation({ xpProgress = 0 }: TopNavigationProps) {
                       </p>
                     </div>
                     <motion.button
-                      whileHover={{ backgroundColor: "#f5f5f5" }}
+                      whileHover={{ scale: 1.01 }}
+                      whileTap={{ scale: 0.99 }}
                       onClick={handleLogout}
                       disabled={isSigningOut}
-                      className="w-full text-left px-4 py-2 text-sm text-foreground hover:bg-card flex items-center gap-2 transition-colors border-t border-border"
+                      className="w-full text-left px-4 py-2.5 text-sm text-[rgb(var(--error))] hover:bg-[rgb(var(--surface-container-low))] flex items-center gap-2 transition-colors border-t border-border/40 cursor-pointer"
                       type="button"
                     >
-                      <LogOut className="w-4 h-4" />
+                      <LogOut className="w-4 h-4 text-[rgb(var(--error))]" />
                       {isSigningOut ? "Signing out..." : "Sign Out"}
                     </motion.button>
                   </motion.div>
