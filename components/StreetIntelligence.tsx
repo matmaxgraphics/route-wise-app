@@ -3,11 +3,6 @@
 import { motion } from "framer-motion";
 import { AlertCircle, Info, Shield } from "lucide-react";
 
-const DEFAULT_TIPS = [
-  { type: "warning", icon: AlertCircle, title: "Hold your phone securely", location: "near Iwo Road", color: "text-[rgb(var(--secondary-container))]" },
-  { type: "info", icon: Info, title: "Keep small cash ready", location: "at Ojoo park", color: "text-[rgb(var(--primary))]" },
-  { type: "warning", icon: AlertCircle, title: "Drivers may increase fares", location: "after 7PM", color: "text-[rgb(var(--secondary-container))]" },
-];
 
 interface StreetIntelligenceProps {
   tips?: Array<{ content: string; severity: string }>;
@@ -25,7 +20,7 @@ export default function StreetIntelligence({ tips: rawTips, verificationCount }:
           ? "text-[rgb(var(--secondary-container))]"
           : "text-[rgb(var(--primary))]",
       }))
-    : DEFAULT_TIPS;
+    : [];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -71,32 +66,43 @@ export default function StreetIntelligence({ tips: rawTips, verificationCount }:
         animate="show"
         className="space-y-3 mb-6"
       >
-        {tips.map((tip, idx) => {
-          const IconComponent = tip.icon;
+        {tips.length > 0 ? (
+          tips.map((tip, idx) => {
+            const IconComponent = tip.icon;
 
-          return (
-            <motion.div
-              key={idx}
-              variants={itemVariants}
-              whileHover={{ scale: 1.02, x: 4 }}
-              className="p-4 rounded-2xl bg-[rgb(var(--surface-container-low))] border border-[rgba(110,122,112,0.12)] hover:border-[rgb(var(--primary))] transition-all"
-            >
-              <div className="flex gap-3">
-                <IconComponent
-                  className={`w-5 h-5 shrink-0 mt-0.5 ${tip.color}`}
-                />
+            return (
+              <motion.div
+                key={idx}
+                variants={itemVariants}
+                whileHover={{ scale: 1.02, x: 4 }}
+                className="p-4 rounded-2xl bg-[rgb(var(--surface-container-low))] border border-[rgba(110,122,112,0.12)] hover:border-[rgb(var(--primary))] transition-all"
+              >
+                <div className="flex gap-3">
+                  <IconComponent
+                    className={`w-5 h-5 shrink-0 mt-0.5 ${tip.color}`}
+                  />
 
-                <div className="flex-1">
-                  <p className="font-medium text-foreground">{tip.title}</p>
+                  <div className="flex-1">
+                    <p className="font-medium text-foreground">{tip.title}</p>
 
-                  {tip.location && (
-                    <p className="text-sm text-muted-foreground">{tip.location}</p>
-                  )}
+                    {tip.location && (
+                      <p className="text-sm text-muted-foreground">{tip.location}</p>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          );
-        })}
+              </motion.div>
+            );
+          })
+        ) : (
+          <motion.div
+            variants={itemVariants}
+            className="p-6 rounded-2xl bg-[rgb(var(--surface-container-low))]/50 border border-dashed border-[rgba(110,122,112,0.2)] text-center"
+          >
+            <p className="text-sm font-medium text-muted-foreground">
+              No street tips or safety warnings have been submitted for this route yet.
+            </p>
+          </motion.div>
+        )}
       </motion.div>
 
       {/* Trust Indicator */}
