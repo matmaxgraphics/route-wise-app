@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { motion } from "framer-motion";
 import { MapPin, Award, Settings, Check, X, LogOut } from "lucide-react";
 import type { RouteToVerify, RouteSearchResult, UserProfile, LeaderboardEntry } from "@/lib/types";
@@ -57,6 +57,7 @@ const ALL_BADGES = [
 export default function Home() {
   const { user, signOut } = useAuth();
   const [isSigningOut, setIsSigningOut] = useState(false);
+  const searchResultRef = useRef<HTMLDivElement | null>(null);
 
   const handleSignOut = async () => {
     setIsSigningOut(true);
@@ -130,6 +131,16 @@ export default function Home() {
       .subscribe();
     return () => { supabase.removeChannel(channel); };
   }, [user?.id, refreshProfile]);
+
+  // Scroll to search result on search state change
+  useEffect(() => {
+    if (searchState !== "idle") {
+      const timer = setTimeout(() => {
+        searchResultRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [searchState]);
 
   const handleSearch = async (from: string, to: string) => {
     setSearchState("loading");
@@ -211,6 +222,8 @@ export default function Home() {
           {activeTab === "explore" && (
             <>
               <HeroSearch onSearch={handleSearch} />
+
+              <div ref={searchResultRef} className="scroll-mt-24" />
 
               {searchState === "loading" && <RouteResult route={null} isLoading />}
 

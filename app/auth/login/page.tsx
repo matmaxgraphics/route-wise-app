@@ -169,7 +169,7 @@ export default function LoginPage() {
             {/* Sign Up Link */}
             <Link
               href="/auth/sign-up"
-              className="w-full py-3 rounded-xl border border-border text-foreground font-semibold text-center hover:bg-card transition-colors"
+              className="w-full block py-3 rounded-xl border border-border text-foreground font-semibold text-center hover:bg-card transition-colors"
             >
               Create Account
             </Link>
