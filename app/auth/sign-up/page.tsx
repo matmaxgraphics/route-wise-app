@@ -53,6 +53,8 @@ export default function SignUpPage() {
       return;
     }
 
+    const trimmedDisplayName = displayName.trim();
+
     try {
       const { error } = await supabase.auth.signUp({
         email,
@@ -61,9 +63,10 @@ export default function SignUpPage() {
           emailRedirectTo:
             process.env.NEXT_PUBLIC_DEV_SUPABASE_REDIRECT_URL ??
             `${window.location.origin}/auth/callback`,
-          data: {
-            display_name: displayName,
-          },
+          data: trimmedDisplayName ? {
+            display_name: trimmedDisplayName,
+            username: trimmedDisplayName,
+          } : undefined,
         },
       });
       if (error) throw error;

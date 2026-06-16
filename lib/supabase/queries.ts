@@ -402,13 +402,10 @@ export async function getUserProfile(
     const { data: authData } = await supabase.auth.getUser();
     const currentUser = authData?.user;
 
-    let defaultUsername = "user_" + userId.slice(0, 5);
+    let defaultUsername = "comutter_" + userId.slice(0, 5);
     let displayName = "";
 
     if (currentUser && currentUser.id === userId) {
-      if (currentUser.email) {
-        defaultUsername = currentUser.email.split("@")[0];
-      }
       displayName = currentUser.user_metadata?.display_name || currentUser.user_metadata?.username || "";
     }
 
