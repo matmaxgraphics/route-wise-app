@@ -538,13 +538,16 @@ export async function submitRouteVerification(
 ): Promise<{ error: PostgrestError | null }> {
   const { routeId, userId, voteType, safetyTips } = input;
 
-  const { error: voteError } = await supabase.from("route_votes").insert([
-    {
-      route_id: routeId,
-      user_id: userId,
-      vote_type: voteType,
-    },
-  ]);
+  const { error: voteError } = await supabase.from("route_votes").upsert(
+    [
+      {
+        route_id: routeId,
+        user_id: userId,
+        vote_type: voteType,
+      },
+    ],
+    { onConflict: "route_id,user_id" }
+  );
 
   if (voteError) {
     return { error: voteError };
