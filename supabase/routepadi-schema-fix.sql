@@ -1,4 +1,4 @@
--- RouteWise schema fix
+-- RoutePadi schema fix
 -- Run this in Supabase SQL Editor after reviewing it.
 --
 -- Root cause of the current error:
@@ -72,7 +72,7 @@ create table if not exists public.route_steps (
   route_id uuid not null references public.routes(id) on delete cascade,
   step_order bigint not null,
   instruction text not null,
-  transport_type text not null default 'other' check (transport_type in ('walk', 'cab', 'bus', 'bike', 'tricycle', 'motorbike', 'other')),
+  transport_type text not null default 'other',
   fare_min bigint not null default 0,
   fare_max bigint not null default 0
 );
@@ -81,7 +81,7 @@ create table if not exists public.safety_tips (
   id uuid primary key default gen_random_uuid(),
   route_id uuid not null references public.routes(id) on delete cascade,
   content text not null,
-  severity text not null default 'normal' check (severity in ('normal', 'warning', 'danger')),
+  severity text not null default 'normal',
   created_by uuid not null references public.profiles(id) on delete cascade,
   created_at timestamp with time zone not null default now()
 );

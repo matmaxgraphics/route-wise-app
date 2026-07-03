@@ -124,9 +124,9 @@ export default function SignUpPage() {
             animate={{ scale: 1 }}
             className="inline-flex items-center justify-center w-12 h-12 rounded-full gradient-blue mb-4"
           >
-            <span className="text-white font-bold text-lg">RW</span>
+            <span className="text-white font-bold text-lg">RP</span>
           </motion.div>
-          <h1 className="text-3xl font-bold text-foreground mb-2">RouteWise</h1>
+          <h1 className="text-3xl font-bold text-foreground mb-2">RoutePadi</h1>
           <p className="text-muted-foreground">Join the transport community</p>
         </div>
 

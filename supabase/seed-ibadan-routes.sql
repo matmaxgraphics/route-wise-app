@@ -1,5 +1,5 @@
 -- ==========================================
--- ROUTEWISE IBADAN - CORE SEED DATA
+-- ROUTEPADI IBADAN - CORE SEED DATA
 -- Inserts key locations and popular routes
 -- Status: 'pending' (Ready for user verification)
 -- ==========================================

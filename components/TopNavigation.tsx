@@ -45,10 +45,10 @@ export default function TopNavigation({ xpProgress = 0 }: TopNavigationProps) {
         {/* Logo */}
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[rgb(var(--primary))] via-[rgb(var(--primary-container))] to-[rgb(var(--secondary-container))] flex items-center justify-center shadow-[0_10px_20px_rgba(0,0,0,0.12)]">
-            <span className="text-white font-black text-sm">RW</span>
+            <span className="text-white font-black text-sm">RP</span>
           </div>
           <h1 className="text-xl md:text-2xl font-extrabold text-[rgb(var(--on-surface))]">
-            RouteWise
+            RoutePadi
           </h1>
         </div>
 

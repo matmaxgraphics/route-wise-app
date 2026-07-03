@@ -33,7 +33,7 @@ export default function SignUpSuccessPage() {
           className="glass-card p-8 mb-8"
         >
           <h1 className="text-3xl font-bold text-foreground mb-3">
-            Welcome to RouteWise!
+            Welcome to RoutePadi!
           </h1>
           <p className="text-muted-foreground mb-6">
             Your account has been created successfully.
@@ -88,7 +88,7 @@ export default function SignUpSuccessPage() {
             onClick={() => (window.location.href = "/")}
             className="w-full py-3 rounded-xl gradient-blue text-white font-semibold flex items-center justify-center gap-2 hover:shadow-lg transition-all"
           >
-            Back to RouteWise
+            Back to RoutePadi
             <ArrowRight className="w-4 h-4" />
           </motion.button>
         </motion.div>

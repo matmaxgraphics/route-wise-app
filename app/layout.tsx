@@ -6,7 +6,7 @@ import { Toaster } from "sonner";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "RouteWise - Community Transport Navigation",
+  title: "RoutePadi - Community Transport Navigation",
   description:
     "Find verified routes, fares, and street tips across Nigerian cities",
   icons: {

@@ -573,7 +573,7 @@ export default function RouteVerificationFlow({
                   Verification Complete!
                 </h2>
                 <p className="text-muted-foreground">
-                  Thank you for helping strengthen community trust in RouteWise
+                  Thank you for helping strengthen community trust in RoutePadi
                 </p>
               </motion.div>
 
