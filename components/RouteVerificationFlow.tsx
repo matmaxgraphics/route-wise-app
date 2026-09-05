@@ -274,13 +274,13 @@ export default function RouteVerificationFlow({
               <div className="flex gap-3 pt-4">
                 <button
                   onClick={onBack}
-                  className="flex-1 px-4 py-3 rounded-xl border-2 border-border text-foreground font-semibold hover:bg-[rgb(var(--surface-container))] transition-colors"
+                  className="flex-1 px-4 py-3 rounded-[9px] border-2 border-border text-foreground font-semibold hover:bg-[rgb(var(--surface-container))] transition-colors"
                 >
                   Back
                 </button>
                 <button
                   onClick={() => setStep("verification")}
-                  className="flex-1 px-4 py-3 rounded-xl gradient-blue text-[rgb(var(--on-secondary-container))] font-semibold hover:shadow-lg transition-shadow"
+                  className="flex-1 px-4 py-3 gradient-blue text-[rgb(var(--on-secondary-container))] font-semibold transition-colors"
                 >
                   Verify Route
                 </button>
@@ -526,14 +526,14 @@ export default function RouteVerificationFlow({
                 <button
                   onClick={() => setStep("preview")}
                   disabled={isLoading}
-                  className="flex-1 px-4 py-3 rounded-xl border-2 border-border text-foreground font-semibold hover:bg-[rgb(var(--surface-container))] transition-colors disabled:opacity-50"
+                  className="flex-1 px-4 py-3 rounded-[9px] border-2 border-border text-foreground font-semibold hover:bg-[rgb(var(--surface-container))] transition-colors disabled:opacity-50"
                 >
                   Back
                 </button>
                 <button
                   onClick={handleSubmitVerification}
                   disabled={isLoading}
-                  className="flex-1 px-4 py-3 rounded-xl gradient-blue text-[rgb(var(--on-secondary-container))] font-semibold hover:shadow-lg transition-shadow disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="flex-1 px-4 py-3 gradient-blue text-[rgb(var(--on-secondary-container))] font-semibold disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {isLoading ? (
                     <>
@@ -603,7 +603,7 @@ export default function RouteVerificationFlow({
               >
                 <button
                   onClick={() => onBack()}
-                  className="flex-1 px-4 py-3 rounded-xl gradient-blue text-[rgb(var(--on-secondary-container))] font-semibold hover:shadow-lg transition-shadow"
+                  className="flex-1 px-4 py-3 gradient-blue text-[rgb(var(--on-secondary-container))] font-semibold transition-colors"
                 >
                   Back to Contribute
                 </button>

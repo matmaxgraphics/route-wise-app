@@ -100,7 +100,7 @@ export default function VerifyRouteModal({
               </div>
               <button
                 onClick={onClose}
-                className="p-2 bg-[rgb(var(--surface-container-low))] hover:bg-[rgb(var(--surface-container))] rounded-2xl transition-colors"
+                className="p-2 bg-[rgb(var(--surface-container-low))] hover:bg-[rgb(var(--surface-container))] rounded-[9px] transition-colors"
                 aria-label="close"
               >
                 <X className="w-5 h-5 text-[rgb(var(--on-surface))]" />
@@ -124,7 +124,7 @@ export default function VerifyRouteModal({
                   <button
                     key={option}
                     onClick={() => setSortBy(option)}
-                    className={`px-3 py-1.5 rounded-2xl text-xs font-semibold transition-all ${
+                    className={`px-3 py-1.5 rounded-[9px] text-xs font-semibold transition-all ${
                       sortBy === option
                         ? "bg-[rgb(var(--primary))] text-white shadow-sm"
                         : "bg-[rgb(var(--surface-container-low))] text-[rgb(var(--on-surface))] hover:bg-[rgb(var(--surface-container))]"

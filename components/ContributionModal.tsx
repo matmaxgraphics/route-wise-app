@@ -164,7 +164,7 @@ export default function ContributionModal({
                   whileTap={{ scale: 0.9 }}
                   onClick={onClose}
                   disabled={isSubmitting}
-                  className="p-2 bg-[rgb(var(--surface-container-low))] rounded-2xl hover:bg-[rgb(var(--surface-container))] transition-colors disabled:opacity-50"
+                  className="p-2 bg-[rgb(var(--surface-container-low))] rounded-[9px] hover:bg-[rgb(var(--surface-container))] transition-colors disabled:opacity-50"
                   aria-label="Close contribution form"
                   type="button"
                 >
@@ -236,7 +236,7 @@ export default function ContributionModal({
                     {formData.routeSteps.map((step, index) => (
                       <div
                         key={index}
-                        className="grid gap-3 p-4 rounded-3xl bg-[rgb(var(--surface-container-low))] border border-border/50"
+                        className="grid gap-3 p-4 rounded-xl bg-[rgb(var(--surface-container-low))] border border-border/50"
                       >
                         <div className="flex items-center justify-between gap-4">
                           <p className="text-sm font-semibold">
@@ -340,7 +340,7 @@ export default function ContributionModal({
                 </div>
 
                 {submitError && (
-                  <div className="rounded-2xl border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
+                  <div className="rounded-xl border border-destructive/30 bg-destructive/10 p-3 text-sm text-destructive">
                     {submitError}
                   </div>
                 )}
@@ -357,7 +357,7 @@ export default function ContributionModal({
                 </motion.button>
 
                 {/* Reward Note */}
-                <p className="text-xs text-center text-[rgb(var(--on-surface))] bg-[rgb(var(--secondary-container))]/15 p-3 rounded-2xl border border-[rgb(var(--secondary-container))]/30">
+                <p className="text-xs text-center text-[rgb(var(--on-surface))] bg-[rgb(var(--secondary-container))]/15 p-3 rounded-xl border border-[rgb(var(--secondary-container))]/30">
                   ✨ Earn{" "}
                   <span className="text-[rgb(var(--accent-shade))] font-semibold">
                     +20 XP
