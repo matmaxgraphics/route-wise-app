@@ -1,45 +1,62 @@
+import Image from "next/image";
+
 interface LogoProps {
   size?: number;
   showWordmark?: boolean;
   className?: string;
 }
 
-/**
- * The Padi Pin -- RoutePadi's locked brand mark (Brand Bible, Concept A).
- * A route-pin silhouette in Chartreuse with a Charcoal outline, set inside
- * a solid Forest circle. No gradients, per the brand's core visual rule.
- */
 export default function Logo({
   size = 40,
   showWordmark = true,
   className = "",
 }: LogoProps) {
+  if (showWordmark) {
+    return (
+      <div className={`flex items-center ${className}`}>
+        <Image
+          src="/logo-light.png"
+          alt="RoutePadi"
+          height={size}
+          width={0}
+          style={{ width: "auto", height: size }}
+          priority
+          className="dark:hidden"
+        />
+        <Image
+          src="/logo-dark.png"
+          alt="RoutePadi"
+          height={size}
+          width={0}
+          style={{ width: "auto", height: size }}
+          priority
+          className="hidden dark:block"
+        />
+      </div>
+    );
+  }
+
+  // Icon-only: standalone Padi Pin matching the logo mark
   return (
-    <div className={`flex items-center gap-3 ${className}`}>
+    <div className={`flex items-center justify-center ${className}`}>
       <svg
         width={size}
         height={size}
-        viewBox="0 0 40 40"
+        viewBox="0 0 48 48"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
+        aria-label="RoutePadi"
         className="shrink-0"
       >
-        <circle cx="20" cy="20" r="20" fill="rgb(var(--primary))" />
         <path
-          d="M20 9c-4.42 0-8 3.58-8 8 0 6 8 14 8 14s8-8 8-14c0-4.42-3.58-8-8-8Z"
+          d="M24 4C15.16 4 8 11.16 8 20C8 32 24 44 24 44C24 44 40 32 40 20C40 11.16 32.84 4 24 4Z"
           fill="rgb(var(--secondary-container))"
           stroke="rgb(var(--on-surface))"
-          strokeWidth="1.5"
+          strokeWidth="2.5"
           strokeLinejoin="round"
         />
-        <circle cx="20" cy="17" r="3" fill="rgb(var(--on-surface))" />
+        <circle cx="24" cy="20" r="5" fill="rgb(var(--on-surface))" />
       </svg>
-      {showWordmark && (
-        <span className="font-display font-extrabold text-xl md:text-2xl text-[rgb(var(--on-surface))] tracking-tight">
-          RoutePadi
-        </span>
-      )}
     </div>
   );
 }
