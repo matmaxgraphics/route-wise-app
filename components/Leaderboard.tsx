@@ -1,9 +1,31 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Trophy, Crown, Flame, ChevronDown, Loader2 } from "lucide-react";
+import { Trophy, ChevronDown, Loader2 } from "lucide-react";
 import type { LeaderboardEntry } from "@/lib/types";
 import ShimmerLoader from "@/components/ShimmerLoader";
+
+function PixelCrownIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      viewBox="0 0 16 12"
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      shapeRendering="crispEdges"
+      aria-hidden="true"
+    >
+      <rect x="1" y="1" width="1" height="1" fill="#1B231D"/><rect x="6" y="1" width="2" height="1" fill="#1B231D"/><rect x="12" y="1" width="1" height="1" fill="#1B231D"/>
+      <rect x="1" y="2" width="1" height="1" fill="#D7EA3C"/><rect x="2" y="2" width="1" height="1" fill="#1B231D"/><rect x="6" y="2" width="2" height="1" fill="#D7EA3C"/><rect x="11" y="2" width="1" height="1" fill="#1B231D"/><rect x="12" y="2" width="1" height="1" fill="#D7EA3C"/>
+      <rect x="1" y="3" width="2" height="1" fill="#D7EA3C"/><rect x="3" y="3" width="1" height="1" fill="#1B231D"/><rect x="5" y="3" width="1" height="1" fill="#1B231D"/><rect x="6" y="3" width="3" height="1" fill="#D7EA3C"/><rect x="9" y="3" width="1" height="1" fill="#1B231D"/><rect x="11" y="3" width="1" height="1" fill="#1B231D"/><rect x="12" y="3" width="2" height="1" fill="#D7EA3C"/>
+      <rect x="1" y="4" width="3" height="1" fill="#D7EA3C"/><rect x="4" y="4" width="1" height="1" fill="#1B231D"/><rect x="5" y="4" width="5" height="1" fill="#D7EA3C"/><rect x="10" y="4" width="1" height="1" fill="#1B231D"/><rect x="11" y="4" width="3" height="1" fill="#D7EA3C"/>
+      <rect x="1" y="5" width="13" height="1" fill="#D7EA3C"/>
+      <rect x="1" y="6" width="13" height="1" fill="#1B231D"/>
+      <rect x="1" y="7" width="13" height="1" fill="#D7EA3C"/>
+      <rect x="1" y="8" width="13" height="1" fill="#D7EA3C"/>
+      <rect x="1" y="9" width="13" height="1" fill="#1B231D"/>
+    </svg>
+  );
+}
 
 interface LeaderboardProps {
   contributors?: LeaderboardEntry[] | null;
@@ -39,9 +61,8 @@ export default function Leaderboard({
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: 0.2 }}
-      className="glass-card p-8"
     >
-      <h3 className="text-xl font-bold mb-6 flex items-center gap-2 text-[rgb(var(--on-surface))]">
+      <h3 className="text-xl font-bold mb-4 flex items-center gap-2 text-[rgb(var(--on-surface))]">
         <Trophy className="w-5 h-5 text-[rgb(var(--primary))]" />
         Top Contributors
       </h3>
@@ -53,50 +74,66 @@ export default function Leaderboard({
           variants={containerVariants}
           initial="hidden"
           animate="show"
-          className="space-y-3"
+          style={{
+            border: "1px solid var(--border)",
+            borderRadius: "12px",
+            background: "rgb(var(--surface-container-lowest))",
+            overflow: "hidden",
+          }}
         >
-          {contributors.map((contributor) => (
+          {contributors.map((contributor, idx) => (
             <motion.div
               key={contributor.id}
               variants={itemVariants}
-              whileHover={{ scale: 1.02, x: 4 }}
-              className="p-4 rounded-2xl bg-[rgb(var(--surface-container-low))] border border-[rgba(110,122,112,0.12)] hover:border-[rgb(var(--primary))] transition-all"
+              className="flex items-center gap-2.5 px-3.5 py-2.5"
+              style={{
+                borderTop: idx === 0 ? "none" : "1px solid var(--border)",
+                background:
+                  contributor.rank === userRank
+                    ? "rgb(var(--surface-container-low))"
+                    : undefined,
+              }}
             >
-              <div className="flex items-center gap-4">
-                <div className="shrink-0 w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-[0_0_0_5px_rgba(252,212,0,0.15)] bg-[rgb(var(--secondary-container))]">
-                  {contributor.rank === 1 ? (
-                    <Crown className="w-5 h-5" />
-                  ) : (
-                    contributor.rank
-                  )}
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1">
-                    <div className="w-8 h-8 rounded-full bg-[rgb(var(--primary))]/15 flex items-center justify-center text-sm font-bold text-[rgb(var(--primary))]">
-                      {contributor.username[0]?.toUpperCase()}
-                    </div>
-                    <div className="min-w-0">
-                      <p className="font-semibold text-foreground truncate">{contributor.username}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {contributor.contributionCount} routes
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="shrink-0 text-right">
-                  <div className="flex items-center justify-end gap-1.5 mb-1">
-                    {contributor.rank <= 3 && (
-                      <Flame className="w-4 h-4 text-[rgb(var(--secondary-container))]" />
-                    )}
-                    <p className="font-bold text-[rgb(var(--primary))]">
-                      {contributor.xp.toLocaleString()}
-                    </p>
-                  </div>
-                  <p className="text-xs text-muted-foreground">XP</p>
-                </div>
+              {/* Rank / Crown */}
+              <div
+                className="shrink-0 flex items-center justify-center font-mono font-bold text-sm text-muted-foreground"
+                style={{ width: 24, textAlign: "center" }}
+              >
+                {contributor.rank === 1 ? (
+                  <PixelCrownIcon className="w-[22px] h-[22px]" />
+                ) : (
+                  contributor.rank
+                )}
               </div>
+
+              {/* Avatar */}
+              <div
+                className="shrink-0 flex items-center justify-center rounded-full font-display font-extrabold"
+                style={{
+                  width: 34,
+                  height: 34,
+                  fontSize: "0.85rem",
+                  background: "rgb(var(--primary))",
+                  color: "rgb(var(--on-primary))",
+                }}
+              >
+                {contributor.username[0]?.toUpperCase()}
+              </div>
+
+              {/* Name + meta */}
+              <div className="flex-1 min-w-0">
+                <p className="font-semibold text-[0.92rem] text-foreground truncate leading-tight">
+                  {contributor.username}
+                </p>
+                <p className="text-xs text-muted-foreground leading-tight">
+                  {contributor.contributionCount} routes
+                </p>
+              </div>
+
+              {/* XP */}
+              <p className="shrink-0 font-mono font-bold text-[0.9rem] text-[rgb(var(--primary))]">
+                {contributor.xp.toLocaleString()} XP
+              </p>
             </motion.div>
           ))}
         </motion.div>
@@ -113,7 +150,8 @@ export default function Leaderboard({
           whileTap={{ scale: 0.98 }}
           onClick={onLoadMore}
           disabled={loadingMore}
-          className="w-full mt-4 py-2.5 rounded-2xl border border-[rgb(var(--outline-variant))]/40 text-sm font-semibold text-[rgb(var(--on-surface-variant))] hover:bg-[rgb(var(--surface-container-low))] transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full mt-3 py-2.5 rounded-xl text-sm font-semibold text-[rgb(var(--on-surface-variant))] transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          style={{ border: "1px solid var(--border)" }}
         >
           {loadingMore ? (
             <Loader2 className="w-4 h-4 animate-spin" />
@@ -129,7 +167,8 @@ export default function Leaderboard({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="mt-6 pt-6 border-t border-[rgba(110,122,112,0.16)]"
+          className="mt-4 pt-4"
+          style={{ borderTop: "1px solid var(--border)" }}
         >
           <p className="text-sm text-muted-foreground text-center">
             {userRank !== null && userRank !== undefined && (

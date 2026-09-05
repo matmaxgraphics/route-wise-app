@@ -20,8 +20,8 @@ export default function SignUpSuccessPage() {
           transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
           className="flex justify-center mb-6"
         >
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-green-100">
-            <CheckCircle className="w-8 h-8 text-green-600" />
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[rgb(var(--primary))]/10">
+            <CheckCircle className="w-8 h-8 text-[rgb(var(--primary))]" />
           </div>
         </motion.div>
 
@@ -40,10 +40,10 @@ export default function SignUpSuccessPage() {
           </p>
 
           {/* Email Verification Info */}
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+          <div className="bg-[rgb(var(--surface-container-low))] border border-[rgb(var(--outline-variant))] rounded-lg p-4 mb-6">
             <div className="flex items-start gap-3">
-              <Mail className="w-5 h-5 text-blue-600 shrink-0 mt-0.5" />
-              <div className="text-sm text-blue-700 text-left">
+              <Mail className="w-5 h-5 text-[rgb(var(--primary))] shrink-0 mt-0.5" />
+              <div className="text-sm text-[rgb(var(--on-surface))] text-left">
                 <p className="font-semibold mb-1">Verify your email</p>
                 <p>
                   Check your inbox for a confirmation link. You&apos;ll need to
@@ -56,7 +56,7 @@ export default function SignUpSuccessPage() {
           {/* Steps */}
           <div className="space-y-3 mb-8">
             <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-600 text-sm font-bold">
+              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[rgb(var(--primary))]/15 text-[rgb(var(--primary))] text-sm font-bold">
                 1
               </div>
               <p className="text-sm text-foreground text-left">
@@ -64,7 +64,7 @@ export default function SignUpSuccessPage() {
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-600 text-sm font-bold">
+              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[rgb(var(--primary))]/15 text-[rgb(var(--primary))] text-sm font-bold">
                 2
               </div>
               <p className="text-sm text-foreground text-left">
@@ -72,7 +72,7 @@ export default function SignUpSuccessPage() {
               </p>
             </div>
             <div className="flex items-center gap-3">
-              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-blue-100 text-blue-600 text-sm font-bold">
+              <div className="flex items-center justify-center w-6 h-6 rounded-full bg-[rgb(var(--primary))]/15 text-[rgb(var(--primary))] text-sm font-bold">
                 3
               </div>
               <p className="text-sm text-foreground text-left">
@@ -86,7 +86,7 @@ export default function SignUpSuccessPage() {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             onClick={() => (window.location.href = "/")}
-            className="w-full py-3 rounded-xl gradient-blue text-white font-semibold flex items-center justify-center gap-2 hover:shadow-lg transition-all"
+            className="w-full py-3 rounded-xl gradient-blue text-[rgb(var(--on-secondary-container))] font-semibold flex items-center justify-center gap-2 hover:shadow-lg transition-all"
           >
             Back to RoutePadi
             <ArrowRight className="w-4 h-4" />

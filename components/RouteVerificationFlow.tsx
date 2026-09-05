@@ -280,7 +280,7 @@ export default function RouteVerificationFlow({
                 </button>
                 <button
                   onClick={() => setStep("verification")}
-                  className="flex-1 px-4 py-3 rounded-xl gradient-blue text-white font-semibold hover:shadow-lg transition-shadow"
+                  className="flex-1 px-4 py-3 rounded-xl gradient-blue text-[rgb(var(--on-secondary-container))] font-semibold hover:shadow-lg transition-shadow"
                 >
                   Verify Route
                 </button>
@@ -533,7 +533,7 @@ export default function RouteVerificationFlow({
                 <button
                   onClick={handleSubmitVerification}
                   disabled={isLoading}
-                  className="flex-1 px-4 py-3 rounded-xl gradient-blue text-white font-semibold hover:shadow-lg transition-shadow disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="flex-1 px-4 py-3 rounded-xl gradient-blue text-[rgb(var(--on-secondary-container))] font-semibold hover:shadow-lg transition-shadow disabled:opacity-50 flex items-center justify-center gap-2"
                 >
                   {isLoading ? (
                     <>
@@ -603,7 +603,7 @@ export default function RouteVerificationFlow({
               >
                 <button
                   onClick={() => onBack()}
-                  className="flex-1 px-4 py-3 rounded-xl gradient-blue text-white font-semibold hover:shadow-lg transition-shadow"
+                  className="flex-1 px-4 py-3 rounded-xl gradient-blue text-[rgb(var(--on-secondary-container))] font-semibold hover:shadow-lg transition-shadow"
                 >
                   Back to Contribute
                 </button>

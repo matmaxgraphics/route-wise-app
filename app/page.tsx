@@ -19,6 +19,7 @@ import VerifyRouteModal from "@/components/VerifyRouteModal";
 import RouteVerificationFlow from "@/components/RouteVerificationFlow";
 import BottomNavigation from "@/components/BottomNavigation";
 import AuthGuard from "@/components/AuthGuard";
+import BadgeIcon from "@/components/BadgeIcon";
 
 type SearchState = "idle" | "loading" | "found" | "not_found";
 
@@ -46,12 +47,12 @@ function getLevelInfo(xp: number) {
 }
 
 const ALL_BADGES = [
-  { id: 1, name: "First Ride", icon: "🚌", hint: "Submit your first route", unlock: (p: UserProfile) => p.contributionCount >= 1 },
-  { id: 2, name: "Fare Whisperer", icon: "💰", hint: "Submit 3 routes", unlock: (p: UserProfile) => p.contributionCount >= 3 },
-  { id: 3, name: "Street Guardian", icon: "🛡️", hint: "Submit 5 routes", unlock: (p: UserProfile) => p.contributionCount >= 5 },
-  { id: 4, name: "Area Commander", icon: "🗺️", hint: "Submit 10 routes", unlock: (p: UserProfile) => p.contributionCount >= 10 },
-  { id: 5, name: "City Explorer", icon: "🌍", hint: "Reach 2500 XP", unlock: (p: UserProfile) => p.xp >= 2500 },
-  { id: 6, name: "Master Scout", icon: "👑", hint: "Reach 5000 XP", unlock: (p: UserProfile) => p.xp >= 5000 },
+  { id: 1, name: "First Ride", hint: "Submit your first route", unlock: (p: UserProfile) => p.contributionCount >= 1 },
+  { id: 2, name: "Fare Whisperer", hint: "Submit 3 routes", unlock: (p: UserProfile) => p.contributionCount >= 3 },
+  { id: 3, name: "Street Guardian", hint: "Submit 5 routes", unlock: (p: UserProfile) => p.contributionCount >= 5 },
+  { id: 4, name: "Area Commander", hint: "Submit 10 routes", unlock: (p: UserProfile) => p.contributionCount >= 10 },
+  { id: 5, name: "City Explorer", hint: "Reach 2500 XP", unlock: (p: UserProfile) => p.xp >= 2500 },
+  { id: 6, name: "Master Scout", hint: "Reach 5000 XP", unlock: (p: UserProfile) => p.xp >= 5000 },
 ];
 
 export default function Home() {
@@ -241,19 +242,26 @@ export default function Home() {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="glass-card p-8 text-center"
+                  className="text-center p-8 bg-[rgb(var(--surface-container-lowest))]"
+                  style={{ border: "1px dashed var(--border-strong)", borderRadius: "14px" }}
                 >
-                  <MapPin className="w-12 h-12 text-muted-foreground mx-auto mb-4 opacity-40" />
-                  <h3 className="text-lg font-semibold mb-2">No route found</h3>
-                  <p className="text-muted-foreground text-sm">
-                    No community route exists for this search yet.{" "}
-                    <button
-                      onClick={() => setActiveTab("contribute")}
-                      className="text-primary font-semibold hover:underline"
-                    >
-                      Be the first to contribute one!
-                    </button>
+                  <svg viewBox="0 0 100 100" className="w-14 h-14 mx-auto mb-3" aria-hidden>
+                    <g transform="translate(4,5)">
+                      <path d="M50 8 C30 8 22 26 22 42 C22 58 38 72 50 92 C62 72 78 58 78 42 C78 26 70 8 50 8 Z" fill="#1B231D"/>
+                    </g>
+                    <path d="M50 8 C30 8 22 26 22 42 C22 58 38 72 50 92 C62 72 78 58 78 42 C78 26 70 8 50 8 Z" fill="#D7EA3C" stroke="#1B231D" strokeWidth="5" strokeLinejoin="round"/>
+                    <text x="50" y="49" fontFamily="Space Mono" fontWeight="700" fontSize="22" fill="#0E3B2A" textAnchor="middle">?</text>
+                  </svg>
+                  <h3 className="text-base font-bold mb-1.5">No route for that yet</h3>
+                  <p className="text-muted-foreground text-sm max-w-[32ch] mx-auto mb-4">
+                    Nobody&apos;s mapped this one. Be the first padi to add it — you&apos;ll earn XP for it.
                   </p>
+                  <button
+                    onClick={() => setActiveTab("contribute")}
+                    className="gradient-blue text-[rgb(var(--on-secondary-container))] font-bold px-5 py-3 text-sm"
+                  >
+                    Contribute a Route
+                  </button>
                 </motion.div>
               )}
             </>
@@ -346,7 +354,8 @@ export default function Home() {
                             width: `${Math.min((levelInfo.progressXP / levelInfo.levelRange) * 100, 100)}%`,
                           }}
                           transition={{ duration: 1, ease: "easeOut" }}
-                          className="h-full gradient-blue rounded-full glow-blue"
+                          className="h-full rounded-full"
+                          style={{ background: "rgb(var(--secondary-container))", border: "none" }}
                         />
                       </div>
                       {levelInfo.nextName ? (
@@ -389,7 +398,13 @@ export default function Home() {
                               : "bg-[rgb(var(--surface-container-low))] border-[rgba(110,122,112,0.12)] opacity-60"
                           }`}
                         >
-                          <div className="text-3xl mb-2">{badge.icon}</div>
+                          <div
+                            className={`mb-2 flex justify-center ${
+                              badge.unlocked ? "text-[rgb(var(--primary))]" : "text-muted-foreground"
+                            }`}
+                          >
+                            <BadgeIcon badgeId={badge.id} className="w-8 h-8" />
+                          </div>
                           <p className="text-xs md:text-sm font-medium text-foreground mb-1">
                             {badge.name}
                           </p>
@@ -457,7 +472,7 @@ export default function Home() {
                             whileTap={{ scale: 0.98 }}
                             onClick={handleSaveSettings}
                             disabled={settingsLoading}
-                            className="flex-1 py-3 rounded-xl gradient-blue text-white font-semibold flex items-center justify-center gap-2 disabled:opacity-50"
+                            className="flex-1 py-3 rounded-xl gradient-blue text-[rgb(var(--on-secondary-container))] font-semibold flex items-center justify-center gap-2 disabled:opacity-50"
                           >
                             <Check className="w-4 h-4" />
                             {settingsLoading ? "Saving..." : "Save Changes"}

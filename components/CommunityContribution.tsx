@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Award, Star, Lock, Plus } from "lucide-react";
 import type { UserProfile } from "@/lib/types";
+import BadgeIcon from "@/components/BadgeIcon";
 
 interface CommunityContributionProps {
   onContributeClick: () => void;
@@ -34,12 +35,12 @@ function getLevelInfo(xp: number) {
 }
 
 const ALL_BADGES = [
-  { id: 1, name: "First Ride", icon: "🚌", unlock: (p: UserProfile) => p.contributionCount >= 1 },
-  { id: 2, name: "Fare Whisperer", icon: "💰", unlock: (p: UserProfile) => p.contributionCount >= 3 },
-  { id: 3, name: "Street Guardian", icon: "🛡️", unlock: (p: UserProfile) => p.contributionCount >= 5 },
-  { id: 4, name: "Area Commander", icon: "🗺️", unlock: (p: UserProfile) => p.contributionCount >= 10 },
-  { id: 5, name: "City Explorer", icon: "🌍", unlock: (p: UserProfile) => p.xp >= 2500 },
-  { id: 6, name: "Master Scout", icon: "👑", unlock: (p: UserProfile) => p.xp >= 5000 },
+  { id: 1, name: "First Ride", hint: "Submit your first route", unlock: (p: UserProfile) => p.contributionCount >= 1 },
+  { id: 2, name: "Fare Whisperer", hint: "Submit 3 routes", unlock: (p: UserProfile) => p.contributionCount >= 3 },
+  { id: 3, name: "Street Guardian", hint: "Submit 5 routes", unlock: (p: UserProfile) => p.contributionCount >= 5 },
+  { id: 4, name: "Area Commander", hint: "Submit 10 routes", unlock: (p: UserProfile) => p.contributionCount >= 10 },
+  { id: 5, name: "City Explorer", hint: "Reach 2,500 XP", unlock: (p: UserProfile) => p.xp >= 2500 },
+  { id: 6, name: "Master Scout", hint: "Reach 5,000 XP", unlock: (p: UserProfile) => p.xp >= 5000 },
 ];
 
 export default function CommunityContribution({
@@ -76,12 +77,16 @@ export default function CommunityContribution({
             </div>
           </div>
 
-          <div className="w-full h-3 rounded-full bg-[rgb(var(--surface-container))] overflow-hidden border border-[rgba(110,122,112,0.18)]">
+          <div
+            className="w-full h-2 rounded-full bg-[rgb(var(--surface-container))] overflow-hidden"
+            style={{ border: "none" }}
+          >
             <motion.div
               initial={{ width: 0 }}
               animate={{ width: isLoading ? "0%" : `${xpPercentage}%` }}
               transition={{ duration: 1, ease: "easeOut" }}
-              className="h-full gradient-blue rounded-full glow-blue"
+              className="h-full rounded-full"
+              style={{ background: "rgb(var(--secondary-container))", border: "none" }}
             />
           </div>
         </div>
@@ -100,23 +105,37 @@ export default function CommunityContribution({
           Achievements
         </h3>
 
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {badges.map((badge, idx) => (
             <motion.div
               key={badge.id}
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: idx * 0.05 }}
-              whileHover={badge.unlocked ? { scale: 1.08, y: -4 } : {}}
-              className={`p-4 rounded-2xl border text-center transition-all ${
-                badge.unlocked
-                  ? "bg-[rgb(var(--primary))]/10 border-[rgb(var(--primary))]/30 cursor-pointer hover:border-[rgb(var(--primary))]/50"
-                  : "bg-[rgb(var(--surface-container-low))] border-[rgba(110,122,112,0.12)] opacity-60"
-              }`}
+              whileHover={badge.unlocked ? { scale: 1.04, y: -2 } : {}}
+              className="relative flex flex-col items-center gap-1.5 p-3.5 rounded-xl text-center bg-[rgb(var(--surface-container-lowest))]"
+              style={{ border: "1px solid var(--border)" }}
             >
-              <div className="text-3xl mb-2">{badge.icon}</div>
-              <p className="text-xs md:text-sm font-medium text-foreground mb-1">{badge.name}</p>
-              {!badge.unlocked && <Lock className="w-3 h-3 mx-auto text-muted-foreground" />}
+              {/* Lock badge overlay */}
+              {!badge.unlocked && (
+                <div
+                  className="absolute top-1.5 right-1.5 w-4 h-4 rounded-full flex items-center justify-center"
+                  style={{ background: "rgb(var(--on-surface-variant))" }}
+                >
+                  <Lock className="w-2.5 h-2.5 text-white" />
+                </div>
+              )}
+              <div
+                style={
+                  !badge.unlocked
+                    ? { filter: "grayscale(1)", opacity: 0.32 }
+                    : undefined
+                }
+              >
+                <BadgeIcon badgeId={badge.id} className="w-10 h-10" />
+              </div>
+              <p className="text-[0.78rem] font-bold text-foreground leading-tight">{badge.name}</p>
+              <p className="font-mono text-[0.64rem] text-muted-foreground">{badge.unlocked ? "Unlocked" : badge.hint}</p>
             </motion.div>
           ))}
         </div>
@@ -128,7 +147,7 @@ export default function CommunityContribution({
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={onContributeClick}
-          className="py-4 rounded-2xl gradient-blue text-[rgb(var(--on-primary))] font-semibold flex items-center justify-center gap-2 shadow-[0_15px_35px_rgba(0,0,0,0.12)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.12)] transition-shadow glow-blue"
+          className="py-4 gradient-blue text-[rgb(var(--on-secondary-container))] font-bold flex items-center justify-center gap-2 transition-colors"
         >
           <Plus className="w-5 h-5" />
           Contribute Route
@@ -138,25 +157,28 @@ export default function CommunityContribution({
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={onVerifyClick}
-          className="py-4 rounded-2xl bg-[rgb(var(--surface-container-low))] border border-[rgba(110,122,112,0.12)] text-[rgb(var(--on-surface))] font-semibold flex items-center justify-center gap-2 hover:border-[rgb(var(--primary))] transition-colors"
+          className="py-4 rounded-[9px] bg-transparent text-[rgb(var(--on-surface))] font-bold flex items-center justify-center gap-2 transition-colors"
+          style={{ border: "2px solid rgb(var(--on-surface))" }}
         >
-          <Star className="w-5 h-5 text-primary" />
+          <Star className="w-5 h-5" />
           Verify Route
         </motion.button>
       </div>
 
-      {/* Reward Note */}
+      {/* Tip banner — spec: surface-2 bg, Forest-tinted border, lightbulb icon */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.3 }}
-        className="p-4 rounded-2xl bg-[rgb(var(--secondary-container))]/15 border border-[rgb(var(--secondary-container))]/30"
+        className="flex gap-2.5 items-start p-3 rounded-xl text-sm bg-[rgb(var(--surface-container-low))]"
+        style={{ border: "1px solid var(--border)" }}
       >
-        <p className="text-sm text-foreground">
-          <span className="font-semibold text-primary">💡 Tip:</span> Earn{" "}
-          <span className="text-primary font-bold">+10 XP</span> for each route
-          contribution and verification
-        </p>
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-4 h-4 shrink-0 mt-0.5 text-[rgb(var(--primary))]">
+          <path d="M9 18h6M10 22h4M12 2a6 6 0 00-4 10.5c.6.6 1 1.4 1 2.5h6c0-1.1.4-1.9 1-2.5A6 6 0 0012 2z"/>
+        </svg>
+        <span className="text-foreground">
+          Earn <strong className="font-mono">+10 XP</strong> for each route contribution and verification
+        </span>
       </motion.div>
     </motion.div>
   );

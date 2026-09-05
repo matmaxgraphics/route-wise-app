@@ -39,7 +39,7 @@ export default function AuthGuard({ children, feature, fallback }: AuthGuardProp
           </p>
           <Link
             href="/auth/login"
-            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl gradient-blue text-white font-semibold hover:shadow-lg transition-all"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-xl gradient-blue text-[rgb(var(--on-secondary-container))] font-semibold hover:shadow-lg transition-all"
           >
             <LogIn className="w-4 h-4" />
             Sign In to Continue

@@ -64,7 +64,7 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
         <div className="space-y-4 mb-8">
           {/* From Input */}
           <motion.div whileFocus={{ scale: 1.02 }}>
-            <label className="block text-sm font-medium text-muted-foreground mb-2">
+            <label className="block font-mono text-[0.68rem] uppercase tracking-[0.08em] text-muted-foreground mb-1.5">
               From
             </label>
             <div className="relative">
@@ -74,7 +74,7 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
                 value={from}
                 onChange={(e) => setFrom(e.target.value)}
                 placeholder="Enter starting location"
-                className="glass-input w-full pl-12 pr-4 py-3 text-foreground"
+                className="glass-input w-full pl-12 pr-4 py-3"
               />
             </div>
           </motion.div>
@@ -95,7 +95,7 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
 
           {/* To Input */}
           <motion.div whileFocus={{ scale: 1.02 }}>
-            <label className="block text-sm font-medium text-muted-foreground mb-2">
+            <label className="block font-mono text-[0.68rem] uppercase tracking-[0.08em] text-muted-foreground mb-1.5">
               To
             </label>
             <div className="relative">
@@ -105,7 +105,7 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
                 value={to}
                 onChange={(e) => setTo(e.target.value)}
                 placeholder="Enter destination"
-                className="glass-input w-full pl-12 pr-4 py-3 text-foreground"
+                className="glass-input w-full pl-12 pr-4 py-3"
               />
             </div>
           </motion.div>
@@ -116,28 +116,27 @@ export default function HeroSearch({ onSearch }: HeroSearchProps) {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={handleSearch}
-          className="w-full py-4 rounded-2xl gradient-blue text-[rgb(var(--on-primary))] font-semibold flex items-center justify-center gap-3 shadow-[0_15px_35px_rgba(0,0,0,0.12)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.12)] transition-shadow smooth-transition glow-blue"
+          className="w-full py-4 gradient-blue text-[rgb(var(--on-secondary-container))] font-bold flex items-center justify-center gap-3 transition-colors"
           type="button"
         >
           <Search className="w-5 h-5" />
           Find Route
         </motion.button>
 
-        <div className="mt-8 pt-8 border-t border-border/40">
-          <p className="text-sm text-muted-foreground mb-4">Quick routes:</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+        <div className="mt-6 pt-6" style={{ borderTop: "1px solid var(--border)" }}>
+          <p className="font-mono text-[0.68rem] uppercase tracking-[0.08em] text-muted-foreground mb-3">Quick routes</p>
+          <div className="flex flex-wrap gap-2">
             {quickRoutes.map((route, idx) => (
               <motion.button
                 key={idx}
-                whileHover={{ scale: 1.05, y: -2 }}
-                whileTap={{ scale: 0.95 }}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
                 onClick={() => handleQuickRoute(route)}
-                className="p-3 rounded-2xl bg-[rgb(var(--surface-container-low))] hover:bg-[rgb(var(--surface-container))] border border-[rgba(110,122,112,0.12)] hover:border-[rgb(var(--primary))] transition-all text-sm font-semibold text-[rgb(var(--on-surface))]"
+                className="px-3.5 py-2 rounded-full font-sans font-semibold text-sm text-[rgb(var(--on-surface))] bg-[rgb(var(--surface-container-lowest))] transition-colors"
+                style={{ border: "1.5px solid var(--border-strong)" }}
                 type="button"
               >
-                <span className="text-primary">{route.from}</span>
-                <span className="text-muted-foreground mx-1">→</span>
-                <span className="text-primary">{route.to}</span>
+                {route.from} → {route.to}
               </motion.button>
             ))}
           </div>

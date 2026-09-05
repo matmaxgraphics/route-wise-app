@@ -17,7 +17,7 @@ export default function StreetIntelligence({ tips: rawTips, verificationCount }:
         title: t.content,
         location: "",
         color: t.severity === "warning"
-          ? "text-[rgb(var(--secondary-container))]"
+          ? "text-[rgb(var(--accent-shade))]"
           : "text-[rgb(var(--primary))]",
       }))
     : [];

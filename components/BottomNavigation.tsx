@@ -19,49 +19,38 @@ export default function BottomNavigation({
   ] as const;
 
   return (
-    <motion.nav
+    <motion.div
       initial={{ y: 100 }}
       animate={{ y: 0 }}
       transition={{ duration: 0.4 }}
-      className="fixed bottom-0 left-0 right-0 md:hidden bg-background/95 backdrop-blur-lg border-t border-border/40"
+      className="fixed bottom-4 left-0 right-0 flex justify-center md:hidden z-40 px-4"
     >
-      <div className="flex items-center justify-around px-4 py-3 min-h-14">
+      <nav
+        className="flex overflow-hidden bg-[rgb(var(--surface-container-lowest))] max-w-[340px] w-full"
+        style={{ border: "1px solid var(--border)", borderRadius: "14px" }}
+      >
         {tabs.map((tab) => {
           const IconComponent = tab.icon;
           const isActive = activeTab === tab.id;
 
           return (
-            <motion.button
+            <button
               key={tab.id}
-              whileTap={{ scale: 0.95 }}
               onClick={() => onTabChange(tab.id)}
-              className="flex flex-col items-center gap-1.5 px-6 py-2 rounded-lg transition-all relative"
+              className="flex flex-col items-center gap-1 flex-1 py-3 px-1.5 font-mono text-[0.68rem] uppercase tracking-[0.04em] transition-colors"
+              style={{
+                background: isActive ? "rgb(var(--primary))" : "transparent",
+                color: isActive
+                  ? "rgb(var(--on-primary))"
+                  : "rgb(var(--on-surface-variant))",
+              }}
             >
-              {/* Background Pill */}
-              {isActive && (
-                <motion.div
-                  layoutId="nav-pill"
-                  className="absolute inset-0 rounded-2xl bg-linear-to-br from-[rgb(var(--primary))] via-[rgb(var(--primary-container))] to-[rgb(var(--secondary-container))] -z-10 glow-blue"
-                  transition={{ type: "spring", bounce: 0.2 }}
-                />
-              )}
-
-              <IconComponent
-                className={`w-6 h-6 transition-colors ${
-                  isActive ? "text-white" : "text-muted-foreground"
-                }`}
-              />
-              <span
-                className={`text-xs font-semibold transition-colors ${
-                  isActive ? "text-white" : "text-muted-foreground"
-                }`}
-              >
-                {tab.label}
-              </span>
-            </motion.button>
+              <IconComponent className="w-5 h-5" />
+              {tab.label}
+            </button>
           );
         })}
-      </div>
-    </motion.nav>
+      </nav>
+    </motion.div>
   );
 }

@@ -1,0 +1,635 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1"><style>:root{color-scheme:light}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found]){display:none!important}</style></head><body>
+<title>RoutePadi Brand Bible</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400..800&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap">
+<style>
+  :root{
+    --bg:#FAF6EC;
+    --surface:#FFFFFF;
+    --surface-2:#F1ECDD;
+    --ink:#1B231D;
+    --ink-muted:#5B6B58;
+    --accent:#D7EA3C;
+    --accent-ink:#1B231D;
+    --brand:#0E3B2A;
+    --brand-ink:#FAF6EC;
+    --border: rgba(14,59,42,0.16);
+    --border-strong: rgba(14,59,42,0.32);
+    --shadow-ink: rgba(14,45,34,0.9);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0A2E20;
+      --surface:#123D2E;
+      --surface-2:#0E3527;
+      --ink:#F3EFE2;
+      --ink-muted:#9FB09B;
+      --accent:#D7EA3C;
+      --accent-ink:#1B231D;
+      --brand:#163F2E;
+      --brand-ink:#FAF6EC;
+      --border: rgba(215,234,60,0.18);
+      --border-strong: rgba(215,234,60,0.32);
+      --shadow-ink: rgba(0,0,0,0.55);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0A2E20;
+    --surface:#123D2E;
+    --surface-2:#0E3527;
+    --ink:#F3EFE2;
+    --ink-muted:#9FB09B;
+    --accent:#D7EA3C;
+    --accent-ink:#1B231D;
+    --brand:#163F2E;
+    --brand-ink:#FAF6EC;
+    --border: rgba(215,234,60,0.18);
+    --border-strong: rgba(215,234,60,0.32);
+    --shadow-ink: rgba(0,0,0,0.55);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:"Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--accent); color:var(--accent-ink); }
+  a{ color:inherit; }
+  a:focus-visible, button:focus-visible{ outline:3px solid var(--accent); outline-offset:2px; }
+
+  h1,h2,h3{
+    font-family:"Bricolage Grotesque", ui-sans-serif, system-ui, sans-serif;
+    text-wrap:balance;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  .mono{
+    font-family:"Space Mono", ui-monospace, monospace;
+    font-variant-numeric:tabular-nums;
+  }
+  .eyebrow{
+    font-family:"Space Mono", ui-monospace, monospace;
+    font-size:0.72rem;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color:var(--ink-muted);
+  }
+
+  .wrap{ max-width:920px; margin:0 auto; padding:0 clamp(20px,5vw,48px); }
+
+  /* sticky contents bar */
+  .contents{
+    position:sticky; top:0; z-index:10;
+    background:var(--bg);
+    border-bottom:1px solid var(--border);
+    backdrop-filter:saturate(1.1);
+  }
+  .contents-inner{
+    max-width:920px; margin:0 auto; padding:0 clamp(20px,5vw,48px);
+    display:flex; gap:22px; overflow-x:auto;
+    font-family:"Space Mono", ui-monospace, monospace;
+    font-size:0.74rem; letter-spacing:0.04em; text-transform:uppercase;
+  }
+  .contents-inner a{
+    display:block; padding:14px 0; white-space:nowrap;
+    color:var(--ink-muted); text-decoration:none; border-bottom:2px solid transparent;
+  }
+  .contents-inner a:hover{ color:var(--ink); border-color:var(--accent); }
+
+  /* hero */
+  .hero{ padding:64px 0 40px; }
+  .hero h1{ font-size:clamp(2.6rem, 7vw, 4.6rem); font-weight:800; }
+  .hero .position{
+    font-size:clamp(1.05rem,2.4vw,1.35rem);
+    max-width:34ch; margin-top:18px; color:var(--ink);
+  }
+  .traits{
+    display:flex; flex-wrap:wrap; gap:10px 18px;
+    margin-top:26px; padding-top:22px; border-top:1px solid var(--border);
+    font-family:"Space Mono", ui-monospace, monospace; font-size:0.78rem;
+    letter-spacing:0.03em; color:var(--ink-muted); text-transform:uppercase;
+  }
+  .meta-line{ margin-top:14px; color:var(--ink-muted); font-size:0.92rem; max-width:60ch; }
+
+  section{ padding:56px 0; border-top:1px solid var(--border); }
+  .sec-head{ display:flex; align-items:baseline; gap:14px; margin-bottom:30px; }
+  .sec-num{ font-family:"Space Mono",monospace; color:var(--ink-muted); font-size:0.95rem; }
+  .sec-head h2{ font-size:clamp(1.5rem,3.4vw,2.1rem); font-weight:700; }
+  .sec-intro{ max-width:64ch; color:var(--ink-muted); margin-bottom:28px; }
+
+  /* before/after */
+  .compare{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:8px; }
+  @media (max-width:640px){ .compare{ grid-template-columns:1fr; } }
+  .compare-card{ padding:22px; border:1px solid var(--border); border-radius:10px; background:var(--surface); }
+  .compare-label{ font-family:"Space Mono",monospace; font-size:0.72rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--ink-muted); margin-bottom:14px; }
+  .btn-demo{
+    width:100%; padding:15px 18px; border-radius:8px; border:none;
+    font-family:"Plus Jakarta Sans"; font-weight:700; font-size:0.98rem;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .btn-before{ background:linear-gradient(90deg,#1B7A45 0%,#D6D93C 100%); color:#12321F; }
+  .btn-after{ background:var(--accent); color:var(--accent-ink); border:2px solid var(--ink); }
+  .compare-note{ margin-top:14px; font-size:0.86rem; color:var(--ink-muted); }
+
+  /* color swatches */
+  .swatch-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:16px; }
+  .swatch{ border:1px solid var(--border); border-radius:10px; overflow:hidden; background:var(--surface); }
+  .swatch-fill{ height:96px; }
+  .swatch-body{ padding:14px 16px; }
+  .swatch-name{ font-weight:700; font-size:0.95rem; }
+  .swatch-hex{ font-family:"Space Mono",monospace; font-size:0.82rem; color:var(--ink-muted); margin-top:2px; }
+  .swatch-use{ font-size:0.82rem; color:var(--ink-muted); margin-top:8px; }
+
+  .theme-demo{ display:grid; grid-template-columns:1fr 1fr; gap:18px; margin-top:26px; }
+  @media (max-width:640px){ .theme-demo{ grid-template-columns:1fr; } }
+  .demo-panel{ border-radius:12px; padding:22px; border:1px solid var(--border-strong); }
+  .demo-panel.light{ background:#FAF6EC; color:#1B231D; }
+  .demo-panel.dark{ background:#0A2E20; color:#F3EFE2; }
+  .demo-panel .demo-card{ border-radius:8px; padding:16px; margin-top:14px; }
+  .demo-panel.light .demo-card{ background:#FFFFFF; border:1px solid rgba(14,59,42,0.16); }
+  .demo-panel.dark .demo-card{ background:#123D2E; border:1px solid rgba(215,234,60,0.18); }
+  .demo-tag{ font-family:"Space Mono",monospace; font-size:0.7rem; text-transform:uppercase; letter-spacing:0.08em; opacity:0.7; }
+  .demo-cta{ display:inline-block; margin-top:12px; padding:8px 14px; border-radius:6px; background:#D7EA3C; color:#1B231D; font-weight:700; font-size:0.85rem; border:2px solid currentColor; }
+
+  /* typography */
+  .type-block{ margin-bottom:34px; }
+  .type-label{ font-family:"Space Mono",monospace; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--ink-muted); margin-bottom:10px; }
+  .display-sample{ font-size:clamp(2rem,6vw,3.2rem); font-weight:800; line-height:1.05; }
+  .body-sample{ max-width:52ch; font-size:1.08rem; padding:20px; border-left:3px solid var(--accent); background:var(--surface-2); border-radius:0 8px 8px 0; }
+  .body-sample .fare{ font-family:"Space Mono",monospace; font-weight:700; }
+  .mono-sample{ font-family:"Space Mono",monospace; font-size:0.95rem; background:var(--surface-2); padding:16px 18px; border-radius:8px; display:inline-block; }
+
+  /* illustration rules */
+  .rule-list{ display:grid; gap:14px; margin-top:22px; }
+  .rule{ display:grid; grid-template-columns:28px 1fr; gap:14px; align-items:start; padding-bottom:14px; border-bottom:1px solid var(--border); }
+  .rule:last-child{ border-bottom:none; }
+  .rule-mark{ font-family:"Space Mono",monospace; color:var(--ink-muted); }
+  .rule strong{ display:block; margin-bottom:2px; }
+  .icon-demo-row{ display:flex; gap:28px; align-items:center; margin-top:26px; flex-wrap:wrap; }
+  .icon-demo{ text-align:center; }
+  .icon-demo svg{ width:76px; height:76px; }
+  .icon-demo-cap{ font-family:"Space Mono",monospace; font-size:0.72rem; color:var(--ink-muted); margin-top:8px; }
+
+  /* badge roster */
+  .badge-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:16px; }
+  .badge-card{ border:1px solid var(--border); border-radius:12px; padding:20px; background:var(--surface); display:flex; flex-direction:column; gap:10px; }
+  .badge-card svg{ width:56px; height:56px; }
+  .badge-name{ font-weight:700; font-size:1.02rem; }
+  .badge-unlock{ font-family:"Space Mono",monospace; font-size:0.78rem; color:var(--ink-muted); }
+  .badge-why{ font-size:0.86rem; color:var(--ink-muted); flex-grow:1; }
+  .reserved-note{
+    margin-top:18px; padding:16px 18px; border:1px dashed var(--border-strong);
+    border-radius:10px; font-size:0.88rem; color:var(--ink-muted);
+  }
+
+  /* status log */
+  .log{ display:grid; gap:0; border:1px solid var(--border); border-radius:10px; overflow:hidden; }
+  .log-row{ display:grid; grid-template-columns:1fr auto; gap:12px; padding:14px 18px; align-items:center; }
+  .log-row:nth-child(odd){ background:var(--surface); }
+  .log-row:nth-child(even){ background:var(--surface-2); }
+  .status-pill{
+    font-family:"Space Mono",monospace; font-size:0.7rem; letter-spacing:0.06em; text-transform:uppercase;
+    padding:4px 10px; border-radius:20px; white-space:nowrap;
+  }
+  .status-locked{ background:var(--brand); color:var(--brand-ink); }
+  .status-next{ background:var(--accent); color:var(--accent-ink); }
+  .status-review{ background:transparent; border:1.5px solid var(--accent); color:var(--ink); font-weight:700; }
+  .status-deferred{ background:transparent; border:1px solid var(--border-strong); color:var(--ink-muted); }
+
+  /* logo */
+  .logo-concept-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:18px; }
+  .logo-concept-card{ border:1px solid var(--border); border-radius:12px; padding:22px; background:var(--surface); display:flex; flex-direction:column; gap:12px; }
+  .concept-head{ display:flex; align-items:center; justify-content:space-between; min-height:22px; }
+  .concept-letter{ font-family:"Space Mono",monospace; color:var(--ink-muted); font-size:0.85rem; }
+  .concept-tag-recommended{ font-family:"Space Mono",monospace; font-size:0.64rem; letter-spacing:0.08em; text-transform:uppercase; background:var(--accent); color:var(--accent-ink); padding:3px 9px; border-radius:20px; }
+  .logo-lockup{ display:flex; align-items:center; gap:12px; padding:14px 4px; }
+  .logo-lockup.solo{ justify-content:center; padding:26px 4px; }
+  .logo-icon{ width:50px; height:50px; flex-shrink:0; }
+  .wordmark{ font-family:"Bricolage Grotesque",ui-sans-serif,sans-serif; font-weight:800; font-size:1.5rem; letter-spacing:-0.02em; color:var(--ink); }
+  .wordmark.large{ font-size:2rem; }
+  .concept-name{ font-weight:700; font-size:1rem; }
+  .concept-why{ font-size:0.86rem; color:var(--ink-muted); margin:0; }
+
+  .scale-test{ margin-top:30px; border-top:1px solid var(--border); padding-top:26px; }
+  .scale-test-label{ font-family:"Space Mono",monospace; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.1em; color:var(--ink-muted); margin-bottom:18px; }
+  .scale-row{ display:flex; gap:34px; align-items:flex-end; flex-wrap:wrap; }
+  .scale-item{ text-align:center; }
+  .app-icon-box{ width:72px; height:72px; border-radius:18px; background:#FAF6EC; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; }
+  .app-icon-box svg{ width:44px; height:44px; }
+  .favicon-circle{ width:40px; height:40px; border-radius:50%; background:#FAF6EC; border:1px solid var(--border); display:flex; align-items:center; justify-content:center; margin:0 auto; }
+  .favicon-circle svg{ width:25px; height:25px; }
+  .knockout-circle{ width:52px; height:52px; border-radius:50%; background:#0E3B2A; display:flex; align-items:center; justify-content:center; margin:0 auto; }
+  .knockout-circle svg{ width:30px; height:30px; }
+  .scale-cap{ font-family:"Space Mono",monospace; font-size:0.66rem; color:var(--ink-muted); margin-top:8px; }
+
+  footer{ padding:50px 0 70px; }
+  footer p{ color:var(--ink-muted); font-size:0.9rem; max-width:56ch; }
+
+  @media (prefers-reduced-motion: reduce){ *{ scroll-behavior:auto !important; } }
+</style>
+
+<nav class="contents">
+  <div class="contents-inner">
+    <a href="#foundation">01 Foundation</a>
+    <a href="#logo">02 Logo</a>
+    <a href="#color">03 Color</a>
+    <a href="#type">04 Type</a>
+    <a href="#illustration">05 Illustration</a>
+    <a href="#badges">06 Badges</a>
+    <a href="#status">07 Status</a>
+  </div>
+</nav>
+
+<div class="wrap hero" id="foundation">
+  <div class="eyebrow">Brand Bible &middot; v1 &middot; Milestone 1 of 10</div>
+  <h1>RoutePadi</h1>
+  <p class="position">The padi who already knows the shortcut &mdash; community-verified transit routes for Ibadan, built to feel like local knowledge, not a startup template.</p>
+  <div class="traits">
+    <span>Friendly</span><span>&middot;</span>
+    <span>Local</span><span>&middot;</span>
+    <span>Community-Driven</span><span>&middot;</span>
+    <span>Helpful</span><span>&middot;</span>
+    <span>Youthful</span><span>&middot;</span>
+    <span>Trustworthy</span><span>&middot;</span>
+    <span>Never Corporate</span>
+  </div>
+  <p class="meta-line">This is a living document. It captures what's locked in through the brand strategy pass so far &mdash; palette, type, illustration rules, and the badge roster. Logo directions are in review below; the full component library and social templates follow in later milestones and will fold back in here too.</p>
+</div>
+
+<section class="wrap">
+  <div class="sec-head"><span class="sec-num">01.1</span><h2>Why we're rebuilding the look</h2></div>
+  <p class="sec-intro">The current build reads as generic SaaS, not Ibadan: a pale mint header, thin grey-bordered inputs, a bold-but-characterless sans, and a green-to-yellow gradient reused on both the "Find Route" and "Contribute Route" buttons. Strip the wordmark and it could be any transit, fintech, or scheduling app. Nothing signals community, youth, or Nigeria &mdash; and the gradient is the clearest tell.</p>
+  <div class="compare">
+    <div class="compare-card">
+      <div class="compare-label">Before &mdash; live today</div>
+      <button class="btn-demo btn-before">Find Route</button>
+      <p class="compare-note">linear-gradient, green &rarr; yellow &mdash; soft, template-default, no edge</p>
+    </div>
+    <div class="compare-card">
+      <div class="compare-label">After &mdash; brand direction</div>
+      <button class="btn-demo btn-after">Find Route</button>
+      <p class="compare-note">flat chartreuse, charcoal outline &mdash; confident, poster-flat, no blend</p>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" id="logo">
+  <div class="sec-head"><span class="sec-num">02</span><h2>Logo</h2></div>
+  <p class="sec-intro">The live mark today is a circular "RP" monogram in a green-to-teal gradient &mdash; the same generic-template problem as the buttons, one level up. Concept B went two refinement rounds (a decorated road, then a dark coin with a dotted laneline) and never quite closed the gap. Concept A wins instead &mdash; and it was already the systemic pick: the exact route-pin object from the illustration system and badge roster, now doing a third job as the logo.</p>
+
+  <div class="logo-concept-grid">
+    <div class="logo-concept-card">
+      <div class="concept-head"><span class="concept-letter">Concept A</span><span class="concept-tag-recommended">Locked</span></div>
+      <div class="logo-lockup">
+        <svg viewBox="0 0 100 100" class="logo-icon">
+          <g transform="translate(4,5)"><path d="M50 8 C30 8 22 26 22 42 C22 58 38 72 50 92 C62 72 78 58 78 42 C78 26 70 8 50 8 Z" fill="#1B231D"/></g>
+          <path d="M50 8 C30 8 22 26 22 42 C22 58 38 72 50 92 C62 72 78 58 78 42 C78 26 70 8 50 8 Z" fill="#D7EA3C" stroke="#1B231D" stroke-width="5" stroke-linejoin="round"/>
+          <circle cx="50" cy="42" r="12" fill="#0E3B2A"/>
+        </svg>
+        <span class="wordmark">RoutePadi</span>
+      </div>
+      <div class="concept-name">Padi Pin</div>
+      <p class="concept-why">The exact route-pin object already established in the illustration system and reused across the badge roster. Nothing new to maintain &mdash; the logo is the same shape people already see everywhere in the product.</p>
+    </div>
+
+    <div class="logo-concept-card">
+      <div class="concept-head"><span class="concept-letter">Concept B</span></div>
+      <div class="logo-lockup">
+        <svg viewBox="0 0 100 100" class="logo-icon">
+          <circle cx="50" cy="50" r="40" fill="#0E3B2A"/>
+          <path d="M34,80 L34,44 Q34,28 50,28 L70,28" fill="none" stroke="#FAF6EC" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M34,80 L34,44 Q34,28 50,28 L70,28" fill="none" stroke="#D7EA3C" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="1 11"/>
+        </svg>
+        <span class="wordmark">RoutePadi</span>
+      </div>
+      <div class="concept-name">Padi Path &mdash; not chosen</div>
+      <p class="concept-why">Two rounds: a decorated road-bend icon, then a dark coin with a dotted laneline. Both got closer to "professional" but neither beat the case for reusing an object the product already relies on elsewhere. Kept here for the record, not carried forward.</p>
+    </div>
+
+    <div class="logo-concept-card">
+      <div class="concept-head"><span class="concept-letter">Concept C</span></div>
+      <div class="logo-lockup solo">
+        <span class="wordmark large">RoutePadi</span>
+      </div>
+      <div class="concept-name">Wordmark Only</div>
+      <p class="concept-why">No icon to design or maintain, and Bricolage Grotesque is distinctive enough to carry it alone. The tradeoff: something square still has to represent the app on a home screen or browser tab, and a lone "R" monogram reintroduces the exact generic-monogram problem we're moving away from.</p>
+    </div>
+  </div>
+
+  <div class="scale-test">
+    <div class="scale-test-label">Scale &amp; versatility test &mdash; Concept A, locked</div>
+    <div class="scale-row">
+      <div class="scale-item">
+        <div class="app-icon-box">
+          <svg viewBox="0 0 100 100">
+            <g transform="translate(4,5)"><path d="M50 8 C30 8 22 26 22 42 C22 58 38 72 50 92 C62 72 78 58 78 42 C78 26 70 8 50 8 Z" fill="#1B231D"/></g>
+            <path d="M50 8 C30 8 22 26 22 42 C22 58 38 72 50 92 C62 72 78 58 78 42 C78 26 70 8 50 8 Z" fill="#D7EA3C" stroke="#1B231D" stroke-width="5" stroke-linejoin="round"/>
+            <circle cx="50" cy="42" r="12" fill="#0E3B2A"/>
+          </svg>
+        </div>
+        <div class="scale-cap">App icon</div>
+      </div>
+      <div class="scale-item">
+        <div class="favicon-circle">
+          <svg viewBox="0 0 100 100">
+            <path d="M50 8 C30 8 22 26 22 42 C22 58 38 72 50 92 C62 72 78 58 78 42 C78 26 70 8 50 8 Z" fill="#D7EA3C" stroke="#1B231D" stroke-width="7" stroke-linejoin="round"/>
+            <circle cx="50" cy="42" r="13" fill="#0E3B2A"/>
+          </svg>
+        </div>
+        <div class="scale-cap">Favicon / avatar crop</div>
+      </div>
+      <div class="scale-item">
+        <div class="knockout-circle">
+          <svg viewBox="0 0 100 100">
+            <path d="M50 8 C30 8 22 26 22 42 C22 58 38 72 50 92 C62 72 78 58 78 42 C78 26 70 8 50 8 Z" fill="#FAF6EC"/>
+          </svg>
+        </div>
+        <div class="scale-cap">Single-color knockout</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" id="color">
+  <div class="sec-head"><span class="sec-num">03</span><h2>Color</h2></div>
+  <p class="sec-intro">A strict duotone core &mdash; four colors, no more &mdash; so the brand stays recognizable at a glance on X. Gamification tiers (bronze / silver / gold) get their own expanded palette in Milestone 4; they are deliberately not added here.</p>
+  <div class="swatch-grid">
+    <div class="swatch">
+      <div class="swatch-fill" style="background:#0E3B2A"></div>
+      <div class="swatch-body">
+        <div class="swatch-name">Forest</div>
+        <div class="swatch-hex">#0E3B2A</div>
+        <div class="swatch-use">Dominant surface. Headers, brand blocks, badge frames.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-fill" style="background:#D7EA3C"></div>
+      <div class="swatch-body">
+        <div class="swatch-name">Chartreuse</div>
+        <div class="swatch-hex">#D7EA3C</div>
+        <div class="swatch-use">Pop accent only. CTAs, highlights, badge fills. Used sparingly.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-fill" style="background:#1B231D"></div>
+      <div class="swatch-body">
+        <div class="swatch-name">Charcoal</div>
+        <div class="swatch-hex">#1B231D</div>
+        <div class="swatch-use">Ink. Body text, outlines, icon linework.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-fill" style="background:#FAF6EC"></div>
+      <div class="swatch-body">
+        <div class="swatch-name">Cream</div>
+        <div class="swatch-hex">#FAF6EC</div>
+        <div class="swatch-use">Paper. Primary background &mdash; never clinical white.</div>
+      </div>
+    </div>
+    <div class="swatch">
+      <div class="swatch-fill" style="background:#5B6B58"></div>
+      <div class="swatch-body">
+        <div class="swatch-name">Moss</div>
+        <div class="swatch-hex">#5B6B58</div>
+        <div class="swatch-use">Muted neutral for secondary text &mdash; hue-biased, never flat grey.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="theme-demo">
+    <div class="demo-panel light">
+      <div class="demo-tag">Light ground</div>
+      <div class="demo-card">
+        <strong>Mokola &rarr; Moniya</strong>
+        <p style="margin:6px 0 0; font-size:0.86rem;">2 legs &middot; ~35 min</p>
+        <span class="demo-cta">View Route</span>
+      </div>
+    </div>
+    <div class="demo-panel dark">
+      <div class="demo-tag">Dark ground</div>
+      <div class="demo-card">
+        <strong>Mokola &rarr; Moniya</strong>
+        <p style="margin:6px 0 0; font-size:0.86rem;">2 legs &middot; ~35 min</p>
+        <span class="demo-cta">View Route</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" id="type">
+  <div class="sec-head"><span class="sec-num">04</span><h2>Type</h2></div>
+  <p class="sec-intro">Two roles, plus a utility face for data. Headlines carry the personality; body text stays boring-legible on purpose &mdash; it'll be read at a bus stop, in direct sun, on a cracked screen.</p>
+
+  <div class="type-block">
+    <div class="type-label">Display &mdash; Bricolage Grotesque 800</div>
+    <div class="display-sample">Board at UI Gate</div>
+  </div>
+
+  <div class="type-block">
+    <div class="type-label">Body &mdash; Plus Jakarta Sans 400/500</div>
+    <div class="body-sample">
+      From Mokola to Moniya: take a taxi to UI Gate, then board another taxi going to Moniya.
+      Expected fare: <span class="fare">&#8358;700&ndash;&#8358;900</span>.
+    </div>
+  </div>
+
+  <div class="type-block">
+    <div class="type-label">Utility &mdash; Space Mono 400/700</div>
+    <div class="mono-sample">+10 XP &middot; route contribution &middot; 970 XP to Route Commander</div>
+  </div>
+</section>
+
+<section class="wrap" id="illustration">
+  <div class="sec-head"><span class="sec-num">05</span><h2>Illustration System</h2></div>
+  <p class="sec-intro">No mascot &mdash; a closed roster of recurring objects instead, so art direction stays a fixed checklist rather than a character needing a pose in every scene. Two render techniques, one rule set underneath.</p>
+
+  <div class="rule-list">
+    <div class="rule"><span class="rule-mark">01</span><div><strong>Flat fills only</strong>One or two colors max, pulled only from the core palette plus charcoal/cream. No gradients, ever &mdash; that's the one rule everything else exists to protect.</div></div>
+    <div class="rule"><span class="rule-mark">02</span><div><strong>Consistent thick outline</strong>Every object gets the same relative stroke weight, heavy enough to read at thumbnail size on X.</div></div>
+    <div class="rule"><span class="rule-mark">03</span><div><strong>Offset sticker-shadow</strong>A solid duplicate silhouette sits behind each object, same direction and distance every time &mdash; this single detail is what ties flat-sticker UI art to pixel badge art as one family.</div></div>
+    <div class="rule"><span class="rule-mark">04</span><div><strong>Two techniques, one vocabulary</strong>UI and social content render flat and unframed. Badges render pixelated inside a shared rounded-square frame with a tier ring. Same object, same colors, different technique for different context.</div></div>
+  </div>
+
+  <div class="icon-demo-row">
+    <div class="icon-demo">
+      <svg viewBox="0 0 100 100">
+        <g transform="translate(5,6)"><path d="M50 8 C30 8 22 26 22 42 C22 58 38 72 50 92 C62 72 78 58 78 42 C78 26 70 8 50 8 Z" fill="#1B231D"/></g>
+        <g><path d="M50 8 C30 8 22 26 22 42 C22 58 38 72 50 92 C62 72 78 58 78 42 C78 26 70 8 50 8 Z" fill="#D7EA3C" stroke="#1B231D" stroke-width="5" stroke-linejoin="round"/><circle cx="50" cy="42" r="12" fill="#0E3B2A"/></g>
+      </svg>
+      <div class="icon-demo-cap">Route pin &mdash; core UI icon</div>
+    </div>
+  </div>
+</section>
+
+<section class="wrap" id="badges">
+  <div class="sec-head"><span class="sec-num">06</span><h2>Badge Roster</h2></div>
+  <p class="sec-intro">Mapped 1:1 to the six achievements already live on routepadi.com &mdash; nothing invented, nothing left over. Rendered as hand-authored pixel sprites (not smooth flat icons) &mdash; the retro/arcade texture the brief asked for, built from the same duotone palette as everything else.</p>
+
+  <div class="badge-grid">
+    <div class="badge-card">
+      <svg viewBox="0 0 16 16" shape-rendering="crispEdges">
+<rect x="6" y="1" width="1" height="1" fill="#1B231D"/><rect x="7" y="1" width="3" height="1" fill="#D7EA3C"/><rect x="10" y="1" width="1" height="1" fill="#1B231D"/>
+<rect x="4" y="2" width="1" height="1" fill="#1B231D"/><rect x="5" y="2" width="7" height="1" fill="#D7EA3C"/><rect x="12" y="2" width="1" height="1" fill="#1B231D"/>
+<rect x="3" y="3" width="1" height="1" fill="#1B231D"/><rect x="4" y="3" width="9" height="1" fill="#D7EA3C"/><rect x="13" y="3" width="1" height="1" fill="#1B231D"/>
+<rect x="2" y="4" width="1" height="1" fill="#1B231D"/><rect x="3" y="4" width="11" height="1" fill="#D7EA3C"/><rect x="14" y="4" width="1" height="1" fill="#1B231D"/>
+<rect x="2" y="5" width="1" height="1" fill="#1B231D"/><rect x="3" y="5" width="3" height="1" fill="#0E3B2A"/><rect x="6" y="5" width="8" height="1" fill="#D7EA3C"/><rect x="14" y="5" width="1" height="1" fill="#1B231D"/>
+<rect x="2" y="6" width="1" height="1" fill="#1B231D"/><rect x="3" y="6" width="3" height="1" fill="#0E3B2A"/><rect x="6" y="6" width="8" height="1" fill="#D7EA3C"/><rect x="14" y="6" width="1" height="1" fill="#1B231D"/>
+<rect x="2" y="7" width="1" height="1" fill="#1B231D"/><rect x="3" y="7" width="3" height="1" fill="#0E3B2A"/><rect x="6" y="7" width="8" height="1" fill="#D7EA3C"/><rect x="14" y="7" width="1" height="1" fill="#1B231D"/>
+<rect x="2" y="8" width="1" height="1" fill="#1B231D"/><rect x="3" y="8" width="11" height="1" fill="#D7EA3C"/><rect x="14" y="8" width="1" height="1" fill="#1B231D"/>
+<rect x="2" y="9" width="1" height="1" fill="#1B231D"/><rect x="3" y="9" width="11" height="1" fill="#D7EA3C"/><rect x="14" y="9" width="1" height="1" fill="#1B231D"/>
+<rect x="4" y="10" width="3" height="1" fill="#1B231D"/><rect x="10" y="10" width="3" height="1" fill="#1B231D"/>
+<rect x="3" y="11" width="5" height="1" fill="#1B231D"/><rect x="9" y="11" width="5" height="1" fill="#1B231D"/>
+<rect x="3" y="12" width="5" height="1" fill="#1B231D"/><rect x="9" y="12" width="5" height="1" fill="#1B231D"/>
+<rect x="3" y="13" width="5" height="1" fill="#1B231D"/><rect x="9" y="13" width="5" height="1" fill="#1B231D"/>
+<rect x="4" y="14" width="3" height="1" fill="#1B231D"/><rect x="10" y="14" width="3" height="1" fill="#1B231D"/>
+      </svg>
+      <div class="badge-name">First Ride</div>
+      <div class="badge-unlock">Unlocked on your first route submission</div>
+      <div class="badge-why">Object: keke &mdash; the vehicle of someone's very first logged journey.</div>
+    </div>
+
+    <div class="badge-card">
+      <svg viewBox="0 0 18 18" shape-rendering="crispEdges">
+<rect x="8" y="1" width="6" height="1" fill="#1B231D"/>
+<rect x="7" y="2" width="2" height="1" fill="#1B231D"/><rect x="9" y="2" width="4" height="1" fill="#D7EA3C"/><rect x="13" y="2" width="2" height="1" fill="#1B231D"/>
+<rect x="6" y="3" width="1" height="1" fill="#1B231D"/><rect x="7" y="3" width="3" height="1" fill="#D7EA3C"/><rect x="10" y="3" width="2" height="1" fill="#A8B82E"/><rect x="12" y="3" width="3" height="1" fill="#D7EA3C"/><rect x="15" y="3" width="1" height="1" fill="#1B231D"/>
+<rect x="5" y="4" width="2" height="1" fill="#1B231D"/><rect x="7" y="4" width="1" height="1" fill="#D7EA3C"/><rect x="8" y="4" width="1" height="1" fill="#A8B82E"/><rect x="9" y="4" width="4" height="1" fill="#D7EA3C"/><rect x="13" y="4" width="1" height="1" fill="#A8B82E"/><rect x="14" y="4" width="1" height="1" fill="#D7EA3C"/><rect x="15" y="4" width="2" height="1" fill="#1B231D"/>
+<rect x="4" y="5" width="2" height="1" fill="#1B231D"/><rect x="6" y="5" width="1" height="1" fill="#D7EA3C"/><rect x="7" y="5" width="1" height="1" fill="#A8B82E"/><rect x="8" y="5" width="6" height="1" fill="#D7EA3C"/><rect x="14" y="5" width="1" height="1" fill="#A8B82E"/><rect x="15" y="5" width="1" height="1" fill="#D7EA3C"/><rect x="16" y="5" width="1" height="1" fill="#1B231D"/>
+<rect x="3" y="6" width="1" height="1" fill="#1B231D"/><rect x="4" y="6" width="1" height="1" fill="#A8B82E"/><rect x="5" y="6" width="1" height="1" fill="#1B231D"/><rect x="6" y="6" width="1" height="1" fill="#D7EA3C"/><rect x="7" y="6" width="1" height="1" fill="#A8B82E"/><rect x="8" y="6" width="6" height="1" fill="#D7EA3C"/><rect x="14" y="6" width="1" height="1" fill="#A8B82E"/><rect x="15" y="6" width="1" height="1" fill="#D7EA3C"/><rect x="16" y="6" width="1" height="1" fill="#1B231D"/>
+<rect x="2" y="7" width="1" height="1" fill="#1B231D"/><rect x="3" y="7" width="1" height="1" fill="#A8B82E"/><rect x="4" y="7" width="2" height="1" fill="#1B231D"/><rect x="6" y="7" width="1" height="1" fill="#D7EA3C"/><rect x="7" y="7" width="1" height="1" fill="#A8B82E"/><rect x="8" y="7" width="6" height="1" fill="#D7EA3C"/><rect x="14" y="7" width="1" height="1" fill="#A8B82E"/><rect x="15" y="7" width="1" height="1" fill="#D7EA3C"/><rect x="16" y="7" width="2" height="1" fill="#1B231D"/>
+<rect x="1" y="8" width="1" height="1" fill="#1B231D"/><rect x="2" y="8" width="3" height="1" fill="#A8B82E"/><rect x="5" y="8" width="1" height="1" fill="#1B231D"/><rect x="6" y="8" width="1" height="1" fill="#D7EA3C"/><rect x="7" y="8" width="1" height="1" fill="#A8B82E"/><rect x="8" y="8" width="6" height="1" fill="#D7EA3C"/><rect x="14" y="8" width="1" height="1" fill="#A8B82E"/><rect x="15" y="8" width="1" height="1" fill="#D7EA3C"/><rect x="16" y="8" width="1" height="1" fill="#1B231D"/>
+<rect x="1" y="9" width="1" height="1" fill="#1B231D"/><rect x="2" y="9" width="3" height="1" fill="#A8B82E"/><rect x="5" y="9" width="1" height="1" fill="#1B231D"/><rect x="6" y="9" width="1" height="1" fill="#D7EA3C"/><rect x="7" y="9" width="1" height="1" fill="#A8B82E"/><rect x="8" y="9" width="6" height="1" fill="#D7EA3C"/><rect x="14" y="9" width="1" height="1" fill="#A8B82E"/><rect x="15" y="9" width="1" height="1" fill="#D7EA3C"/><rect x="16" y="9" width="1" height="1" fill="#1B231D"/>
+<rect x="1" y="10" width="1" height="1" fill="#1B231D"/><rect x="2" y="10" width="3" height="1" fill="#A8B82E"/><rect x="5" y="10" width="2" height="1" fill="#1B231D"/><rect x="7" y="10" width="1" height="1" fill="#D7EA3C"/><rect x="8" y="10" width="1" height="1" fill="#A8B82E"/><rect x="9" y="10" width="4" height="1" fill="#D7EA3C"/><rect x="13" y="10" width="1" height="1" fill="#A8B82E"/><rect x="14" y="10" width="1" height="1" fill="#D7EA3C"/><rect x="15" y="10" width="2" height="1" fill="#1B231D"/>
+<rect x="0" y="11" width="2" height="1" fill="#1B231D"/><rect x="2" y="11" width="4" height="1" fill="#A8B82E"/><rect x="6" y="11" width="1" height="1" fill="#1B231D"/><rect x="7" y="11" width="3" height="1" fill="#D7EA3C"/><rect x="10" y="11" width="2" height="1" fill="#A8B82E"/><rect x="12" y="11" width="3" height="1" fill="#D7EA3C"/><rect x="15" y="11" width="1" height="1" fill="#1B231D"/>
+<rect x="1" y="12" width="1" height="1" fill="#1B231D"/><rect x="2" y="12" width="5" height="1" fill="#A8B82E"/><rect x="7" y="12" width="2" height="1" fill="#1B231D"/><rect x="9" y="12" width="4" height="1" fill="#D7EA3C"/><rect x="13" y="12" width="2" height="1" fill="#1B231D"/>
+<rect x="1" y="13" width="1" height="1" fill="#1B231D"/><rect x="2" y="13" width="6" height="1" fill="#A8B82E"/><rect x="8" y="13" width="6" height="1" fill="#1B231D"/>
+<rect x="1" y="14" width="1" height="1" fill="#1B231D"/><rect x="2" y="14" width="11" height="1" fill="#A8B82E"/><rect x="13" y="14" width="1" height="1" fill="#1B231D"/>
+<rect x="2" y="15" width="1" height="1" fill="#1B231D"/><rect x="3" y="15" width="9" height="1" fill="#A8B82E"/><rect x="12" y="15" width="1" height="1" fill="#1B231D"/>
+<rect x="3" y="16" width="1" height="1" fill="#1B231D"/><rect x="4" y="16" width="7" height="1" fill="#A8B82E"/><rect x="11" y="16" width="1" height="1" fill="#1B231D"/>
+<rect x="4" y="17" width="7" height="1" fill="#1B231D"/>
+      </svg>
+      <div class="badge-name">Fare Whisperer</div>
+      <div class="badge-unlock">Submit 3 routes</div>
+      <div class="badge-why">Object: naira coin stack &mdash; knowing the real fare before you board.</div>
+    </div>
+
+    <div class="badge-card">
+      <svg viewBox="0 0 16 16" shape-rendering="crispEdges">
+<rect x="3" y="0" width="1" height="1" fill="#1B231D"/><rect x="4" y="0" width="8" height="1" fill="#D7EA3C"/><rect x="12" y="0" width="1" height="1" fill="#1B231D"/>
+<rect x="2" y="1" width="1" height="1" fill="#1B231D"/><rect x="3" y="1" width="10" height="1" fill="#D7EA3C"/><rect x="13" y="1" width="1" height="1" fill="#1B231D"/>
+<rect x="2" y="2" width="1" height="1" fill="#1B231D"/><rect x="3" y="2" width="10" height="1" fill="#D7EA3C"/><rect x="13" y="2" width="1" height="1" fill="#1B231D"/>
+<rect x="2" y="3" width="1" height="1" fill="#1B231D"/><rect x="3" y="3" width="10" height="1" fill="#D7EA3C"/><rect x="13" y="3" width="1" height="1" fill="#1B231D"/>
+<rect x="2" y="4" width="1" height="1" fill="#1B231D"/><rect x="3" y="4" width="1" height="1" fill="#D7EA3C"/><rect x="4" y="4" width="1" height="1" fill="#A8B82E"/><rect x="5" y="4" width="5" height="1" fill="#D7EA3C"/><rect x="10" y="4" width="1" height="1" fill="#A8B82E"/><rect x="11" y="4" width="2" height="1" fill="#D7EA3C"/><rect x="13" y="4" width="1" height="1" fill="#1B231D"/>
+<rect x="2" y="5" width="1" height="1" fill="#1B231D"/><rect x="3" y="5" width="1" height="1" fill="#D7EA3C"/><rect x="4" y="5" width="1" height="1" fill="#A8B82E"/><rect x="5" y="5" width="5" height="1" fill="#D7EA3C"/><rect x="10" y="5" width="1" height="1" fill="#A8B82E"/><rect x="11" y="5" width="2" height="1" fill="#D7EA3C"/><rect x="13" y="5" width="1" height="1" fill="#1B231D"/>
+<rect x="2" y="6" width="1" height="1" fill="#1B231D"/><rect x="3" y="6" width="10" height="1" fill="#D7EA3C"/><rect x="13" y="6" width="1" height="1" fill="#1B231D"/>
+<rect x="2" y="7" width="1" height="1" fill="#1B231D"/><rect x="3" y="7" width="10" height="1" fill="#D7EA3C"/><rect x="13" y="7" width="1" height="1" fill="#1B231D"/>
+<rect x="2" y="8" width="1" height="1" fill="#1B231D"/><rect x="3" y="8" width="10" height="1" fill="#D7EA3C"/><rect x="13" y="8" width="1" height="1" fill="#1B231D"/>
+<rect x="3" y="9" width="1" height="1" fill="#1B231D"/><rect x="4" y="9" width="1" height="1" fill="#A8B82E"/><rect x="5" y="9" width="5" height="1" fill="#D7EA3C"/><rect x="10" y="9" width="1" height="1" fill="#A8B82E"/><rect x="11" y="9" width="1" height="1" fill="#D7EA3C"/><rect x="12" y="9" width="1" height="1" fill="#1B231D"/>
+<rect x="3" y="10" width="1" height="1" fill="#1B231D"/><rect x="4" y="10" width="1" height="1" fill="#A8B82E"/><rect x="5" y="10" width="5" height="1" fill="#D7EA3C"/><rect x="10" y="10" width="1" height="1" fill="#A8B82E"/><rect x="11" y="10" width="1" height="1" fill="#D7EA3C"/><rect x="12" y="10" width="1" height="1" fill="#1B231D"/>
+<rect x="4" y="11" width="1" height="1" fill="#1B231D"/><rect x="5" y="11" width="6" height="1" fill="#D7EA3C"/><rect x="11" y="11" width="1" height="1" fill="#1B231D"/>
+<rect x="4" y="12" width="1" height="1" fill="#1B231D"/><rect x="5" y="12" width="6" height="1" fill="#D7EA3C"/><rect x="11" y="12" width="1" height="1" fill="#1B231D"/>
+<rect x="5" y="13" width="1" height="1" fill="#1B231D"/><rect x="6" y="13" width="4" height="1" fill="#D7EA3C"/><rect x="10" y="13" width="1" height="1" fill="#1B231D"/>
+<rect x="6" y="14" width="1" height="1" fill="#1B231D"/><rect x="7" y="14" width="2" height="1" fill="#D7EA3C"/><rect x="9" y="14" width="1" height="1" fill="#1B231D"/>
+<rect x="7" y="15" width="2" height="1" fill="#1B231D"/>
+      </svg>
+      <div class="badge-name">Street Guardian</div>
+      <div class="badge-unlock">Submit 5 routes</div>
+      <div class="badge-why">Object: shield &mdash; safety and route trustworthiness.</div>
+    </div>
+
+    <div class="badge-card">
+      <svg viewBox="0 0 16 16" shape-rendering="crispEdges">
+<rect x="6" y="1" width="1" height="1" fill="#1B231D"/><rect x="7" y="1" width="5" height="1" fill="#D7EA3C"/><rect x="12" y="1" width="1" height="1" fill="#1B231D"/>
+<rect x="6" y="2" width="1" height="1" fill="#1B231D"/><rect x="7" y="2" width="4" height="1" fill="#D7EA3C"/><rect x="11" y="2" width="1" height="1" fill="#1B231D"/>
+<rect x="6" y="3" width="1" height="1" fill="#1B231D"/><rect x="7" y="3" width="4" height="1" fill="#D7EA3C"/><rect x="11" y="3" width="1" height="1" fill="#1B231D"/>
+<rect x="6" y="4" width="1" height="1" fill="#1B231D"/><rect x="7" y="4" width="3" height="1" fill="#D7EA3C"/><rect x="10" y="4" width="1" height="1" fill="#1B231D"/>
+<rect x="6" y="5" width="1" height="1" fill="#1B231D"/><rect x="7" y="5" width="2" height="1" fill="#D7EA3C"/><rect x="9" y="5" width="1" height="1" fill="#1B231D"/>
+<rect x="6" y="6" width="1" height="1" fill="#1B231D"/><rect x="7" y="6" width="1" height="1" fill="#D7EA3C"/><rect x="8" y="6" width="1" height="1" fill="#1B231D"/>
+<rect x="6" y="7" width="2" height="1" fill="#1B231D"/>
+<rect x="6" y="8" width="2" height="1" fill="#1B231D"/>
+<rect x="6" y="9" width="2" height="1" fill="#1B231D"/>
+<rect x="6" y="10" width="2" height="1" fill="#1B231D"/>
+<rect x="6" y="11" width="2" height="1" fill="#1B231D"/>
+<rect x="6" y="12" width="2" height="1" fill="#1B231D"/>
+<rect x="4" y="13" width="6" height="1" fill="#1B231D"/>
+      </svg>
+      <div class="badge-name">Area Commander</div>
+      <div class="badge-unlock">Submit 10 routes</div>
+      <div class="badge-why">Object: flag on a pin &mdash; territory earned through volume.</div>
+    </div>
+
+    <div class="badge-card">
+      <svg viewBox="0 0 18 18" shape-rendering="crispEdges">
+<rect x="6" y="1" width="6" height="1" fill="#1B231D"/>
+<rect x="4" y="2" width="3" height="1" fill="#1B231D"/><rect x="7" y="2" width="4" height="1" fill="#FAF6EC"/><rect x="11" y="2" width="3" height="1" fill="#1B231D"/>
+<rect x="3" y="3" width="2" height="1" fill="#1B231D"/><rect x="5" y="3" width="8" height="1" fill="#FAF6EC"/><rect x="13" y="3" width="2" height="1" fill="#1B231D"/>
+<rect x="2" y="4" width="2" height="1" fill="#1B231D"/><rect x="4" y="4" width="10" height="1" fill="#FAF6EC"/><rect x="14" y="4" width="2" height="1" fill="#1B231D"/>
+<rect x="2" y="5" width="1" height="1" fill="#1B231D"/><rect x="3" y="5" width="5" height="1" fill="#FAF6EC"/><rect x="8" y="5" width="1" height="1" fill="#D7EA3C"/><rect x="9" y="5" width="1" height="1" fill="#0E3B2A"/><rect x="10" y="5" width="5" height="1" fill="#FAF6EC"/><rect x="15" y="5" width="1" height="1" fill="#1B231D"/>
+<rect x="1" y="6" width="2" height="1" fill="#1B231D"/><rect x="3" y="6" width="4" height="1" fill="#FAF6EC"/><rect x="7" y="6" width="2" height="1" fill="#D7EA3C"/><rect x="9" y="6" width="2" height="1" fill="#0E3B2A"/><rect x="11" y="6" width="4" height="1" fill="#FAF6EC"/><rect x="15" y="6" width="2" height="1" fill="#1B231D"/>
+<rect x="1" y="7" width="1" height="1" fill="#1B231D"/><rect x="2" y="7" width="4" height="1" fill="#FAF6EC"/><rect x="6" y="7" width="3" height="1" fill="#D7EA3C"/><rect x="9" y="7" width="3" height="1" fill="#0E3B2A"/><rect x="12" y="7" width="4" height="1" fill="#FAF6EC"/><rect x="16" y="7" width="1" height="1" fill="#1B231D"/>
+<rect x="1" y="8" width="1" height="1" fill="#1B231D"/><rect x="2" y="8" width="3" height="1" fill="#FAF6EC"/><rect x="5" y="8" width="4" height="1" fill="#D7EA3C"/><rect x="9" y="8" width="4" height="1" fill="#0E3B2A"/><rect x="13" y="8" width="3" height="1" fill="#FAF6EC"/><rect x="16" y="8" width="1" height="1" fill="#1B231D"/>
+<rect x="1" y="9" width="1" height="1" fill="#1B231D"/><rect x="2" y="9" width="3" height="1" fill="#FAF6EC"/><rect x="5" y="9" width="4" height="1" fill="#D7EA3C"/><rect x="9" y="9" width="4" height="1" fill="#0E3B2A"/><rect x="13" y="9" width="3" height="1" fill="#FAF6EC"/><rect x="16" y="9" width="1" height="1" fill="#1B231D"/>
+<rect x="1" y="10" width="1" height="1" fill="#1B231D"/><rect x="2" y="10" width="4" height="1" fill="#FAF6EC"/><rect x="6" y="10" width="3" height="1" fill="#D7EA3C"/><rect x="9" y="10" width="3" height="1" fill="#0E3B2A"/><rect x="12" y="10" width="4" height="1" fill="#FAF6EC"/><rect x="16" y="10" width="1" height="1" fill="#1B231D"/>
+<rect x="1" y="11" width="2" height="1" fill="#1B231D"/><rect x="3" y="11" width="4" height="1" fill="#FAF6EC"/><rect x="7" y="11" width="2" height="1" fill="#D7EA3C"/><rect x="9" y="11" width="2" height="1" fill="#0E3B2A"/><rect x="11" y="11" width="4" height="1" fill="#FAF6EC"/><rect x="15" y="11" width="2" height="1" fill="#1B231D"/>
+<rect x="2" y="12" width="1" height="1" fill="#1B231D"/><rect x="3" y="12" width="5" height="1" fill="#FAF6EC"/><rect x="8" y="12" width="1" height="1" fill="#D7EA3C"/><rect x="9" y="12" width="1" height="1" fill="#0E3B2A"/><rect x="10" y="12" width="5" height="1" fill="#FAF6EC"/><rect x="15" y="12" width="1" height="1" fill="#1B231D"/>
+<rect x="2" y="13" width="2" height="1" fill="#1B231D"/><rect x="4" y="13" width="10" height="1" fill="#FAF6EC"/><rect x="14" y="13" width="2" height="1" fill="#1B231D"/>
+<rect x="3" y="14" width="2" height="1" fill="#1B231D"/><rect x="5" y="14" width="8" height="1" fill="#FAF6EC"/><rect x="13" y="14" width="2" height="1" fill="#1B231D"/>
+<rect x="4" y="15" width="3" height="1" fill="#1B231D"/><rect x="7" y="15" width="4" height="1" fill="#FAF6EC"/><rect x="11" y="15" width="3" height="1" fill="#1B231D"/>
+<rect x="6" y="16" width="6" height="1" fill="#1B231D"/>
+      </svg>
+      <div class="badge-name">City Explorer</div>
+      <div class="badge-unlock">Reach 2,500 XP</div>
+      <div class="badge-why">Object: compass &mdash; discovery earned through sustained contribution.</div>
+    </div>
+
+    <div class="badge-card">
+      <svg viewBox="0 0 16 12" shape-rendering="crispEdges">
+<rect x="1" y="1" width="1" height="1" fill="#1B231D"/><rect x="6" y="1" width="2" height="1" fill="#1B231D"/><rect x="12" y="1" width="1" height="1" fill="#1B231D"/>
+<rect x="1" y="2" width="1" height="1" fill="#D7EA3C"/><rect x="2" y="2" width="1" height="1" fill="#1B231D"/><rect x="6" y="2" width="2" height="1" fill="#D7EA3C"/><rect x="11" y="2" width="1" height="1" fill="#1B231D"/><rect x="12" y="2" width="1" height="1" fill="#D7EA3C"/>
+<rect x="1" y="3" width="2" height="1" fill="#D7EA3C"/><rect x="3" y="3" width="1" height="1" fill="#1B231D"/><rect x="5" y="3" width="1" height="1" fill="#1B231D"/><rect x="6" y="3" width="3" height="1" fill="#D7EA3C"/><rect x="9" y="3" width="1" height="1" fill="#1B231D"/><rect x="11" y="3" width="1" height="1" fill="#1B231D"/><rect x="12" y="3" width="2" height="1" fill="#D7EA3C"/>
+<rect x="1" y="4" width="3" height="1" fill="#D7EA3C"/><rect x="4" y="4" width="1" height="1" fill="#1B231D"/><rect x="5" y="4" width="5" height="1" fill="#D7EA3C"/><rect x="10" y="4" width="1" height="1" fill="#1B231D"/><rect x="11" y="4" width="3" height="1" fill="#D7EA3C"/>
+<rect x="1" y="5" width="13" height="1" fill="#D7EA3C"/>
+<rect x="1" y="6" width="13" height="1" fill="#1B231D"/>
+<rect x="1" y="7" width="13" height="1" fill="#D7EA3C"/>
+<rect x="1" y="8" width="13" height="1" fill="#D7EA3C"/>
+<rect x="1" y="9" width="13" height="1" fill="#1B231D"/>
+      </svg>
+      <div class="badge-name">Master Scout</div>
+      <div class="badge-unlock">Reach 5,000 XP</div>
+      <div class="badge-why">Object: crown &mdash; the top tier, reserved for the highest XP bar.</div>
+    </div>
+  </div>
+
+  <div class="reserved-note">
+    Now designed and scheduled, not deferred anymore: the handshake badge for <strong>OG Padi</strong> is built &mdash; see <a href="https://claude.ai/code/artifact/3a05ca2f-5bd5-46f2-9962-8ecfd6edb8cf" style="color:var(--brand);text-decoration:underline;">Launch Campaign</a> for the object and the rule that protects it. Deliberately kept out of the roster grid above: it's a one-time launch-window badge, not a repeatable achievement, and mixing it in with "submit 5 routes" style badges would blur that distinction.<br>
+    Out of scope for this pass: the rank ladder (Route Scout &rarr; Route Commander), which is a single evolving title rather than a collectible, and the leaderboard's top-3 treatment &mdash; both intentionally deferred.
+  </div>
+</section>
+
+<section class="wrap" id="status">
+  <div class="sec-head"><span class="sec-num">07</span><h2>Status</h2></div>
+  <div class="log">
+    <div class="log-row"><span>Core duotone palette</span><span class="status-pill status-locked">Locked</span></div>
+    <div class="log-row"><span>Typography pairing</span><span class="status-pill status-locked">Locked</span></div>
+    <div class="log-row"><span>Illustration rule system</span><span class="status-pill status-locked">Locked</span></div>
+    <div class="log-row"><span>Badge object roster (6)</span><span class="status-pill status-locked">Locked</span></div>
+    <div class="log-row"><span>Logo (Concept A, Padi Pin)</span><span class="status-pill status-locked">Locked</span></div>
+    <div class="log-row"><span>Pixel badge art, all 6 sprites</span><span class="status-pill status-locked">Locked</span></div>
+    <div class="log-row"><span>Full component library (Design System)</span><span class="status-pill status-locked">Locked</span></div>
+    <div class="log-row"><span>Social media templates (Milestone 5)</span><span class="status-pill status-locked">Locked</span></div>
+    <div class="log-row"><span>Content strategy (Milestone 6)</span><span class="status-pill status-locked">Locked</span></div>
+    <div class="log-row"><span>OG Padi badge &amp; launch campaign (Milestone 7)</span><span class="status-pill status-locked">Locked</span></div>
+    <div class="log-row"><span>Gamification tier colors (bronze/silver/gold)</span><span class="status-pill status-deferred">Deferred</span></div>
+    <div class="log-row"><span>Rank ladder visual treatment</span><span class="status-pill status-deferred">Deferred</span></div>
+    <div class="log-row"><span>Leaderboard top-3 treatment</span><span class="status-pill status-deferred">Deferred</span></div>
+  </div>
+</section>
+
+<footer class="wrap">
+  <p>Logo and badge art locked. The component library lives in its own doc &mdash; <a href="https://claude.ai/code/artifact/16a2f93f-cd9d-42b8-9ae4-c24447c0be3c" style="color:var(--brand);text-decoration:underline;">RoutePadi Design System</a> &mdash; buttons, cards, inputs, navigation, empty and loading states, applied straight onto the real home screen live on routepadi.com today. The badge sprites show up outside the product too, in <a href="https://claude.ai/code/artifact/284ace74-99c3-4bd1-94d5-efc97894e1b5" style="color:var(--brand);text-decoration:underline;">Social Media Templates</a> and get an actual posting rhythm in <a href="https://claude.ai/code/artifact/8c5e571f-6a64-4f16-927b-68d183a23ecf" style="color:var(--brand);text-decoration:underline;">Content Strategy</a>. The reserved OG Padi badge finally has a reason to exist in <a href="https://claude.ai/code/artifact/3a05ca2f-5bd5-46f2-9962-8ecfd6edb8cf" style="color:var(--brand);text-decoration:underline;">Launch Campaign</a>. Next up: Milestone 8, Marketing Assets.</p>
+</footer>
+
+</body></html>

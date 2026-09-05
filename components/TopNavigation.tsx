@@ -8,6 +8,7 @@ import { useTheme } from "next-themes";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import Logo from "@/components/Logo";
 
 interface TopNavigationProps {
   xpProgress?: number; // 0–1
@@ -43,14 +44,7 @@ export default function TopNavigation({ xpProgress = 0 }: TopNavigationProps) {
     >
       <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
         {/* Logo */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[rgb(var(--primary))] via-[rgb(var(--primary-container))] to-[rgb(var(--secondary-container))] flex items-center justify-center shadow-[0_10px_20px_rgba(0,0,0,0.12)]">
-            <span className="text-white font-black text-sm">RP</span>
-          </div>
-          <h1 className="text-xl md:text-2xl font-extrabold text-[rgb(var(--on-surface))]">
-            RoutePadi
-          </h1>
-        </div>
+        <Logo size={40} />
 
         {/* Right Section */}
         <div className="flex items-center gap-4">
@@ -64,7 +58,7 @@ export default function TopNavigation({ xpProgress = 0 }: TopNavigationProps) {
             type="button"
           >
             {theme === "dark" ? (
-              <Sun className="w-5 h-5 text-[rgb(var(--secondary-container))]" />
+              <Sun className="w-5 h-5 text-[rgb(var(--accent-shade))]" />
             ) : (
               <Moon className="w-5 h-5 text-[rgb(var(--on-surface-variant))]" />
             )}
@@ -89,11 +83,11 @@ export default function TopNavigation({ xpProgress = 0 }: TopNavigationProps) {
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   onClick={() => setShowProfileMenu(!showProfileMenu)}
-                  className="w-10 h-10 rounded-full bg-gradient-to-br from-[rgb(var(--primary))]/90 via-[rgb(var(--inverse-primary))]/80 to-[rgb(var(--secondary-container))]/90 flex items-center justify-center border-2 border-[rgba(0,107,63,0.24)] cursor-pointer relative"
+                  className="w-10 h-10 rounded-full bg-[rgb(var(--primary))] flex items-center justify-center border-2 border-[rgb(var(--primary)/0.24)] cursor-pointer relative"
                   aria-label="Open profile menu"
                   type="button"
                 >
-                  <span className="text-white font-bold text-xs">
+                  <span className="text-[rgb(var(--on-primary))] font-bold text-xs">
                     {user?.email?.[0].toUpperCase() || "U"}
                   </span>
                 </motion.button>

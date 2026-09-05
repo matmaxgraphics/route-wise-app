@@ -117,7 +117,7 @@ export default function RouteResult({ route, isLoading }: RouteResultProps) {
 
           <div className="text-center p-4 rounded-2xl bg-[rgb(var(--surface-container-low))]">
             <p className="text-[rgb(var(--on-surface-variant))] text-sm mb-1">Confidence</p>
-            <p className="text-2xl font-bold text-[rgb(var(--secondary-container))]">
+            <p className="text-2xl font-bold text-[rgb(var(--accent-shade))]">
               {route.confidenceScore}% Verified
             </p>
           </div>
@@ -148,8 +148,8 @@ export default function RouteResult({ route, isLoading }: RouteResultProps) {
               whileHover={{ scale: 1.05 }}
               className="px-3 py-1.5 rounded-full bg-[rgb(var(--secondary-container))]/15 border border-[rgb(var(--secondary-container))]/30 flex items-center gap-1.5"
             >
-              <Zap className="w-4 h-4 text-[rgb(var(--secondary-container))]" />
-              <span className="text-sm font-semibold text-[rgb(var(--secondary-container))]">
+              <Zap className="w-4 h-4 text-[rgb(var(--accent-shade))]" />
+              <span className="text-sm font-semibold text-[rgb(var(--accent-shade))]">
                 Fastest
               </span>
             </motion.div>

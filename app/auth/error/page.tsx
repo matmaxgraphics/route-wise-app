@@ -20,8 +20,8 @@ export default function AuthErrorPage() {
           transition={{ delay: 0.2, type: 'spring', stiffness: 200 }}
           className="flex justify-center mb-6"
         >
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100">
-            <AlertTriangle className="w-8 h-8 text-red-600" />
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-[rgb(var(--error))]/10">
+            <AlertTriangle className="w-8 h-8 text-[rgb(var(--error))]" />
           </div>
         </motion.div>
 
@@ -38,8 +38,8 @@ export default function AuthErrorPage() {
           </p>
 
           {/* Error Info */}
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-8 text-left">
-            <p className="text-sm text-red-700">
+          <div className="bg-[rgb(var(--error))]/10 border border-[rgb(var(--error))]/30 rounded-lg p-4 mb-8 text-left">
+            <p className="text-sm text-[rgb(var(--error))]">
               The authentication link may have expired or been invalid. Please try signing up or logging in again.
             </p>
           </div>
@@ -50,7 +50,7 @@ export default function AuthErrorPage() {
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
               onClick={() => window.location.href = '/auth/login'}
-              className="w-full py-3 rounded-xl gradient-blue text-white font-semibold flex items-center justify-center gap-2 hover:shadow-lg transition-all"
+              className="w-full py-3 rounded-xl gradient-blue text-[rgb(var(--on-secondary-container))] font-semibold flex items-center justify-center gap-2 hover:shadow-lg transition-all"
             >
               <LogIn className="w-4 h-4" />
               Try Logging In Again

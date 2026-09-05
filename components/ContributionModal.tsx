@@ -351,7 +351,7 @@ export default function ContributionModal({
                   whileTap={{ scale: 0.98 }}
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full py-3 rounded-2xl gradient-blue text-[rgb(var(--on-primary))] font-semibold shadow-[0_15px_35px_rgba(0,0,0,0.12)] hover:shadow-[0_20px_45px_rgba(0,0,0,0.12)] transition-shadow glow-blue mt-6 disabled:opacity-60 disabled:cursor-not-allowed"
+                  className="w-full py-3 gradient-blue text-[rgb(var(--on-secondary-container))] font-bold mt-6 disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   {isSubmitting ? "Submitting..." : "Submit Route"}
                 </motion.button>
@@ -359,7 +359,7 @@ export default function ContributionModal({
                 {/* Reward Note */}
                 <p className="text-xs text-center text-[rgb(var(--on-surface))] bg-[rgb(var(--secondary-container))]/15 p-3 rounded-2xl border border-[rgb(var(--secondary-container))]/30">
                   ✨ Earn{" "}
-                  <span className="text-[rgb(var(--secondary-container))] font-semibold">
+                  <span className="text-[rgb(var(--accent-shade))] font-semibold">
                     +20 XP
                   </span>{" "}
                   when this route is verified

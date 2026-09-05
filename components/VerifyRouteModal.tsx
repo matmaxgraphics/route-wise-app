@@ -226,7 +226,7 @@ export default function VerifyRouteModal({
                           <p className="text-xs font-semibold text-foreground">{route.confidence}%</p>
                         </div>
                         <div className="w-full h-1.5 bg-[rgb(var(--surface-container))] rounded-full overflow-hidden">
-                          <div className="h-full bg-gradient-blue rounded-full transition-all duration-500" style={{ width: `${route.confidence}%` }} />
+                          <div className="h-full rounded-full transition-all duration-500" style={{ width: `${route.confidence}%`, background: "rgb(var(--secondary-container))", border: "none" }} />
                         </div>
                       </div>
                     </motion.button>

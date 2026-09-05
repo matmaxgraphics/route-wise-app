@@ -2,6 +2,7 @@
 
 import { createClient } from "@/lib/supabase/client";
 import { Input } from "@/components/ui/input";
+import Logo from "@/components/Logo";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -79,9 +80,9 @@ export default function LoginPage() {
           <motion.div
             initial={{ scale: 0.9 }}
             animate={{ scale: 1 }}
-            className="inline-flex items-center justify-center w-12 h-12 rounded-full gradient-blue mb-4"
+            className="inline-flex items-center justify-center mb-4"
           >
-            <span className="text-white font-bold text-lg">RP</span>
+            <Logo size={48} showWordmark={false} />
           </motion.div>
           <h1 className="text-3xl font-bold text-foreground mb-2">RoutePadi</h1>
           <p className="text-muted-foreground">
@@ -172,7 +173,7 @@ export default function LoginPage() {
               whileTap={{ scale: 0.98 }}
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 rounded-xl gradient-blue text-white font-semibold flex items-center justify-center gap-2 hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full py-3 rounded-xl gradient-blue text-[rgb(var(--on-secondary-container))] font-semibold flex items-center justify-center gap-2 hover:shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <LogIn className="w-4 h-4" />
               {isLoading ? "Signing in..." : "Sign In"}
