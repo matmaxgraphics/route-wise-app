@@ -63,6 +63,7 @@ export interface RouteSearchResult {
   totalFareMax: number | null;
   totalDuration: number;
   confidenceScore: number;
+  verificationCount: number;
   steps: RouteStep[];
   safetyTips: Array<{ id: string; content: string; severity: string }>;
 }

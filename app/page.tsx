@@ -285,7 +285,7 @@ export default function Home() {
                   />
                   <StreetIntelligence
                     tips={searchResult.safetyTips}
-                    verificationCount={searchResult.confidenceScore}
+                    verificationCount={searchResult.verificationCount}
                   />
                 </>
               )}

@@ -316,6 +316,7 @@ type RouteRow = {
   destination_location: { name: string } | { name: string }[] | null;
   route_steps: { id: string; step_order: number; instruction: string; transport_type: string; fare_min: number; fare_max: number }[] | null;
   safety_tips: { id: string; content: string; severity: string }[] | null;
+  route_votes: { id: string }[] | null;
 };
 
 export async function searchRoutes(
@@ -339,7 +340,7 @@ export async function searchRoutes(
   const { data: route, error: routeError } = await supabase
     .from("routes")
     .select(
-      "id, status, confidence_score, average_duration, source_location:source_location_id(name), destination_location:destination_location_id(name), route_steps(id, step_order, instruction, transport_type, fare_min, fare_max), safety_tips(id, content, severity)",
+      "id, status, confidence_score, average_duration, source_location:source_location_id(name), destination_location:destination_location_id(name), route_steps(id, step_order, instruction, transport_type, fare_min, fare_max), safety_tips(id, content, severity), route_votes(id)",
     )
     .in("source_location_id", fromIds)
     .in("destination_location_id", toIds)
@@ -368,16 +369,21 @@ export async function searchRoutes(
   const fromName = Array.isArray(r.source_location) ? r.source_location[0]?.name : r.source_location?.name;
   const toName = Array.isArray(r.destination_location) ? r.destination_location[0]?.name : r.destination_location?.name;
 
+  const confidenceScore = r.confidence_score ?? 0;
+  const verificationCount = r.route_votes?.length ?? 0;
+  const effectiveStatus = r.status === "pending" && confidenceScore >= 80 ? "verified" : (r.status ?? "pending");
+
   return {
     data: {
       id: r.id,
       from: fromName ?? from,
       to: toName ?? to,
-      status: r.status ?? "pending",
+      status: effectiveStatus,
       totalFareMin,
       totalFareMax,
       totalDuration: r.average_duration ?? 0,
-      confidenceScore: r.confidence_score ?? 0,
+      confidenceScore,
+      verificationCount,
       steps,
       safetyTips: (r.safety_tips ?? []).map((t) => ({ id: t.id, content: t.content, severity: t.severity })),
     },
