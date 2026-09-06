@@ -16,15 +16,13 @@ export default function Logo({
         <img
           src="/logo-light.png"
           alt="RoutePadi"
-          style={{ height: size, width: "auto" }}
-          className="dark:hidden"
+          className="dark:hidden h-7 sm:h-8 md:h-10 w-auto"
         />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src="/logo-dark.png"
           alt="RoutePadi"
-          style={{ height: size, width: "auto" }}
-          className="hidden dark:block"
+          className="hidden dark:block h-7 sm:h-8 md:h-10 w-auto"
         />
       </div>
     );

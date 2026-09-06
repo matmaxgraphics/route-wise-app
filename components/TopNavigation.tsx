@@ -50,7 +50,7 @@ export default function TopNavigation({ xpProgress = 0 }: TopNavigationProps) {
         <Logo size={40} />
 
         {/* Right Section */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2 sm:gap-4 shrink-0">
           {/* Theme Toggle */}
           <motion.button
             whileHover={{ scale: 1.1 }}
