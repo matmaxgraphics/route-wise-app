@@ -109,7 +109,7 @@ export default function Home() {
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [selectedRouteForVerification, setSelectedRouteForVerification] = useState<RouteToVerify | null>(null);
   const [isDirectVerification, setIsDirectVerification] = useState(false);
-  const [restoredFormState, setRestoredFormState] = useState<{ accuracyRating: number; fareAccuracy: string; safetyRating: number; safetyTips: string } | undefined>(undefined);
+  const [restoredFormState, setRestoredFormState] = useState<{ accuracyRating: number; fareAccuracy: "accurate" | "lower" | "higher" | ""; safetyRating: number; safetyTips: string } | undefined>(undefined);
 
   const [searchState, setSearchState] = useState<SearchState>("idle");
   const [searchResult, setSearchResult] = useState<RouteSearchResult | null>(null);
