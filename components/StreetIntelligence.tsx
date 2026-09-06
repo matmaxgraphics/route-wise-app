@@ -105,28 +105,30 @@ export default function StreetIntelligence({ tips: rawTips, verificationCount }:
         )}
       </motion.div>
 
-      {/* Trust Indicator */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.4 }}
-        className="p-4 rounded-2xl bg-[rgb(var(--primary))]/10 border border-[rgb(var(--primary))]/20 flex items-center gap-3"
-      >
-        <BadgeCheckIcon className="w-5 h-5 text-primary shrink-0" />
+      {/* Trust Indicator — only show when the route has actual verifications */}
+      {verificationCount !== undefined && verificationCount > 0 && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4 }}
+          className="p-4 rounded-2xl bg-[rgb(var(--primary))]/10 border border-[rgb(var(--primary))]/20 flex items-center gap-3"
+        >
+          <BadgeCheckIcon className="w-5 h-5 text-primary shrink-0" />
 
-        <div>
-          <p className="text-sm font-medium text-foreground">
-            Verified by{" "}
-            <span className="text-primary font-bold">
-              {verificationCount !== undefined ? verificationCount : 18} locals
-            </span>
-          </p>
+          <div>
+            <p className="text-sm font-medium text-foreground">
+              Verified by{" "}
+              <span className="text-primary font-bold">
+                {verificationCount} locals
+              </span>
+            </p>
 
-          <p className="text-xs text-muted-foreground">
-            All tips verified by community members
-          </p>
-        </div>
-      </motion.div>
+            <p className="text-xs text-muted-foreground">
+              All tips verified by community members
+            </p>
+          </div>
+        </motion.div>
+      )}
     </motion.div>
   );
 }

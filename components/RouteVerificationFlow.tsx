@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import type { RouteToVerify } from "@/lib/types";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
@@ -16,6 +17,7 @@ import {
   Shield,
   ArrowRight,
   Loader2,
+  LogIn,
 } from "lucide-react";
 
 interface VerificationFormState {
@@ -31,24 +33,28 @@ interface RouteVerificationFlowProps {
   route: RouteToVerify | null;
   onBack: () => void;
   onSuccess: (data: any) => void;
+  allowUnauthenticated?: boolean;
+  initialFormState?: Partial<Pick<VerificationFormState, "accuracyRating" | "fareAccuracy" | "safetyRating" | "safetyTips">>;
 }
 
 export default function RouteVerificationFlow({
   route,
   onBack,
   onSuccess,
+  allowUnauthenticated,
+  initialFormState,
 }: RouteVerificationFlowProps) {
-  const [step, setStep] = useState<"preview" | "verification" | "success">(
-    "preview",
+  const [step, setStep] = useState<"preview" | "verification" | "sign_in" | "success">(
+    initialFormState ? "verification" : "preview",
   );
   const [isLoading, setIsLoading] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const { user } = useAuth();
   const [formState, setFormState] = useState<VerificationFormState>({
-    accuracyRating: 75,
-    fareAccuracy: "",
-    safetyRating: 75,
-    safetyTips: "",
+    accuracyRating: initialFormState?.accuracyRating ?? 75,
+    fareAccuracy: initialFormState?.fareAccuracy ?? "",
+    safetyRating: initialFormState?.safetyRating ?? 75,
+    safetyTips: initialFormState?.safetyTips ?? "",
     errors: {},
     submitted: false,
   });
@@ -71,6 +77,24 @@ export default function RouteVerificationFlow({
     }
 
     if (!user?.id) {
+      if (allowUnauthenticated) {
+        try {
+          sessionStorage.setItem(
+            "routepadi_pending_verification",
+            JSON.stringify({
+              route,
+              formState: {
+                accuracyRating: formState.accuracyRating,
+                fareAccuracy: formState.fareAccuracy,
+                safetyRating: formState.safetyRating,
+                safetyTips: formState.safetyTips,
+              },
+            }),
+          );
+        } catch {}
+        setStep("sign_in");
+        return;
+      }
       setSubmitError("You must be signed in to verify a route.");
       toast.error("Sign in required", {
         description: "Please sign in before verifying a route.",
@@ -545,6 +569,64 @@ export default function RouteVerificationFlow({
                   )}
                 </button>
               </div>
+            </div>
+          </div>
+        )}
+
+        {step === "sign_in" && (
+          <div className="max-w-2xl">
+            <div className="px-6 py-12 text-center space-y-6">
+              <motion.div
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 100 }}
+                className="flex justify-center"
+              >
+                <div className="w-16 h-16 bg-[rgb(var(--secondary-container))]/20 rounded-full flex items-center justify-center">
+                  <LogIn className="w-8 h-8 text-[rgb(var(--primary))]" />
+                </div>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.15 }}
+              >
+                <h2 className="text-2xl font-bold text-foreground mb-2">Almost done!</h2>
+                <p className="text-muted-foreground text-sm max-w-[30ch] mx-auto">
+                  Your verification answers are saved. Sign in to submit — it only takes a second.
+                </p>
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.25 }}
+                className="flex flex-col gap-3 pt-2"
+              >
+                <Link
+                  href="/auth/login"
+                  className="block w-full py-3 gradient-blue text-[rgb(var(--on-secondary-container))] font-bold text-center"
+                >
+                  Sign In
+                </Link>
+                <Link
+                  href="/auth/sign-up"
+                  className="block w-full py-3 rounded-[9px] border-2 text-foreground font-bold text-center transition-colors hover:bg-[rgb(var(--surface-container))]"
+                  style={{ borderColor: "rgb(var(--on-surface))" }}
+                >
+                  Create Account
+                </Link>
+              </motion.div>
+
+              <motion.p
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.35 }}
+                className="text-xs text-muted-foreground"
+              >
+                Your answers will be restored automatically after you sign in.
+              </motion.p>
             </div>
           </div>
         )}

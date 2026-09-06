@@ -8,6 +8,7 @@ import ShimmerLoader from "@/components/ShimmerLoader";
 interface RouteResultProps {
   route: RouteSearchResult | null;
   isLoading?: boolean;
+  onVerifyClick?: () => void;
 }
 
 const TRANSPORT_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -29,7 +30,7 @@ function formatFare(min: number | null | undefined, max: number | null | undefin
   return `₦${min}–₦${max}`;
 }
 
-export default function RouteResult({ route, isLoading }: RouteResultProps) {
+export default function RouteResult({ route, isLoading, onVerifyClick }: RouteResultProps) {
   if (isLoading) {
     return (
       <div className="space-y-6">
@@ -92,7 +93,17 @@ export default function RouteResult({ route, isLoading }: RouteResultProps) {
           <div>
             <p className="text-sm font-semibold text-[rgb(var(--on-surface-variant))]">Pending Verification</p>
             <p className="text-xs text-[rgb(var(--on-surface-variant))]/80 mt-0.5">
-              This route hasn't been verified by the community yet. Help verify it to improve accuracy!
+              This route hasn&apos;t been verified by the community yet.{" "}
+              {onVerifyClick ? (
+                <button
+                  onClick={onVerifyClick}
+                  className="underline underline-offset-2 font-semibold hover:text-[rgb(var(--on-surface-variant))] transition-colors"
+                >
+                  Help verify it to improve accuracy →
+                </button>
+              ) : (
+                "Help verify it to improve accuracy."
+              )}
             </p>
           </div>
         </motion.div>
@@ -154,15 +165,17 @@ export default function RouteResult({ route, isLoading }: RouteResultProps) {
               </span>
             </motion.div>
           )}
-          <motion.div
-            whileHover={{ scale: 1.05 }}
-            className="px-3 py-1.5 rounded-full bg-[rgb(var(--primary))]/12 border border-[rgb(var(--primary))]/25 flex items-center gap-1.5"
-          >
-            <Shield className="w-4 h-4 text-[rgb(var(--primary))]" />
-            <span className="text-sm font-semibold text-[rgb(var(--primary))]">
-              Community Verified
-            </span>
-          </motion.div>
+          {route.status !== "pending" && (
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="px-3 py-1.5 rounded-full bg-[rgb(var(--primary))]/12 border border-[rgb(var(--primary))]/25 flex items-center gap-1.5"
+            >
+              <Shield className="w-4 h-4 text-[rgb(var(--primary))]" />
+              <span className="text-sm font-semibold text-[rgb(var(--primary))]">
+                Community Verified
+              </span>
+            </motion.div>
+          )}
         </div>
       </div>
 

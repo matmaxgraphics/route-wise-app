@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { X, MapPin, Plus, Trash, Clock, DollarSign } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { createClient } from "@/lib/supabase/client";
 import { createRouteWithSteps } from "@/lib/supabase/queries";
@@ -21,6 +21,9 @@ export default function ContributionModal({
   onSuccess,
 }: ContributionModalProps) {
   const { user } = useAuth();
+  const newStepInputRef = useRef<HTMLInputElement | null>(null);
+  const justAddedStep = useRef(false);
+
   const [formData, setFormData] = useState({
     from: "",
     to: "",
@@ -50,11 +53,20 @@ export default function ContributionModal({
   };
 
   const addRouteStep = () => {
+    justAddedStep.current = true;
     setFormData((prev) => ({
       ...prev,
       routeSteps: [...prev.routeSteps, { title: "", duration: "", fare: "" }],
     }));
   };
+
+  useEffect(() => {
+    if (justAddedStep.current) {
+      justAddedStep.current = false;
+      newStepInputRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      newStepInputRef.current?.focus();
+    }
+  }, [formData.routeSteps.length]);
 
   const removeRouteStep = (index: number) => {
     setFormData((prev) => {
@@ -268,6 +280,7 @@ export default function ContributionModal({
                             className="glass-input w-full px-4 py-3"
                             disabled={isSubmitting}
                             required
+                            ref={index === formData.routeSteps.length - 1 ? newStepInputRef : null}
                           />
                         </div>
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">

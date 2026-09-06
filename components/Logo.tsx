@@ -1,5 +1,3 @@
-import Image from "next/image";
-
 interface LogoProps {
   size?: number;
   showWordmark?: boolean;
@@ -14,22 +12,18 @@ export default function Logo({
   if (showWordmark) {
     return (
       <div className={`flex items-center ${className}`}>
-        <Image
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           src="/logo-light.png"
           alt="RoutePadi"
-          height={size}
-          width={0}
-          style={{ width: "auto", height: size }}
-          priority
+          style={{ height: size, width: "auto" }}
           className="dark:hidden"
         />
-        <Image
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
           src="/logo-dark.png"
           alt="RoutePadi"
-          height={size}
-          width={0}
-          style={{ width: "auto", height: size }}
-          priority
+          style={{ height: size, width: "auto" }}
           className="hidden dark:block"
         />
       </div>

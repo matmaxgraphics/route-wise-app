@@ -23,6 +23,28 @@ import BadgeIcon from "@/components/BadgeIcon";
 
 type SearchState = "idle" | "loading" | "found" | "not_found";
 
+function searchResultToRouteToVerify(result: import("@/lib/types").RouteSearchResult): import("@/lib/types").RouteToVerify {
+  const min = result.totalFareMin ?? 0;
+  const max = result.totalFareMax ?? 0;
+  let estimatedFare = "TBD";
+  if (min > 0 && max > 0 && min !== max) estimatedFare = `₦${min}–₦${max}`;
+  else if (min > 0) estimatedFare = `₦${min}`;
+  else if (max > 0) estimatedFare = `₦${max}`;
+  return {
+    id: result.id,
+    from: result.from,
+    to: result.to,
+    estimatedFare,
+    estimatedTime: result.totalDuration > 0 ? `${result.totalDuration} mins` : "TBD",
+    steps: result.steps.length,
+    contributor: "Community",
+    contributorLevel: "Route Scout",
+    confidence: result.confidenceScore,
+    verifications: 0,
+    createdAt: "Recently",
+  };
+}
+
 const LEVEL_THRESHOLDS = [
   { name: "Route Scout", min: 0, max: 999 },
   { name: "Route Commander", min: 1000, max: 2499 },
@@ -76,10 +98,18 @@ export default function Home() {
     }
   };
 
+  const mainRef = useRef<HTMLElement | null>(null);
   const [activeTab, setActiveTab] = useState<"explore" | "contribute" | "profile">("explore");
+
+  const handleTabChange = (tab: "explore" | "contribute" | "profile") => {
+    setActiveTab(tab);
+    mainRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+  };
   const [showContributeModal, setShowContributeModal] = useState(false);
   const [showVerifyModal, setShowVerifyModal] = useState(false);
   const [selectedRouteForVerification, setSelectedRouteForVerification] = useState<RouteToVerify | null>(null);
+  const [isDirectVerification, setIsDirectVerification] = useState(false);
+  const [restoredFormState, setRestoredFormState] = useState<{ accuracyRating: number; fareAccuracy: string; safetyRating: number; safetyTips: string } | undefined>(undefined);
 
   const [searchState, setSearchState] = useState<SearchState>("idle");
   const [searchResult, setSearchResult] = useState<RouteSearchResult | null>(null);
@@ -133,6 +163,20 @@ export default function Home() {
     return () => { supabase.removeChannel(channel); };
   }, [user?.id, refreshProfile]);
 
+  // Restore pending verification from sessionStorage after sign-in
+  useEffect(() => {
+    if (!user) return;
+    try {
+      const saved = sessionStorage.getItem("routepadi_pending_verification");
+      if (!saved) return;
+      sessionStorage.removeItem("routepadi_pending_verification");
+      const { route, formState } = JSON.parse(saved);
+      setSelectedRouteForVerification(route);
+      setIsDirectVerification(true);
+      setRestoredFormState(formState);
+    } catch {}
+  }, [user]);
+
   // Scroll to search result on search state change
   useEffect(() => {
     if (searchState !== "idle") {
@@ -166,6 +210,8 @@ export default function Home() {
 
   const handleVerificationSuccess = () => {
     setSelectedRouteForVerification(null);
+    setIsDirectVerification(false);
+    setRestoredFormState(undefined);
     if (user?.id) {
       const supabase = createClient();
       awardXP(supabase, user.id, 10, false).then(() => refreshProfile());
@@ -217,7 +263,7 @@ export default function Home() {
     <div className="min-h-screen bg-background text-foreground flex flex-col">
       <TopNavigation xpProgress={xpRingProgress} />
 
-      <main className="flex-1 overflow-y-auto pb-20 md:pb-0">
+      <main ref={mainRef} className="flex-1 overflow-y-auto pb-20 md:pb-0">
         <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
 
           {activeTab === "explore" && (
@@ -230,7 +276,13 @@ export default function Home() {
 
               {searchState === "found" && searchResult && (
                 <>
-                  <RouteResult route={searchResult} />
+                  <RouteResult
+                    route={searchResult}
+                    onVerifyClick={searchResult.status === "pending" ? () => {
+                      setSelectedRouteForVerification(searchResultToRouteToVerify(searchResult));
+                      setIsDirectVerification(true);
+                    } : undefined}
+                  />
                   <StreetIntelligence
                     tips={searchResult.safetyTips}
                     verificationCount={searchResult.confidenceScore}
@@ -257,7 +309,7 @@ export default function Home() {
                     Nobody&apos;s mapped this one. Be the first padi to add it — you&apos;ll earn XP for it.
                   </p>
                   <button
-                    onClick={() => setActiveTab("contribute")}
+                    onClick={() => handleTabChange("contribute")}
                     className="gradient-blue text-[rgb(var(--on-secondary-container))] font-bold px-5 py-3 text-sm"
                   >
                     Contribute a Route
@@ -535,7 +587,7 @@ export default function Home() {
         </div>
       </main>
 
-      <BottomNavigation activeTab={activeTab} onTabChange={setActiveTab} />
+      <BottomNavigation activeTab={activeTab} onTabChange={handleTabChange} />
 
       <ContributionModal
         isOpen={showContributeModal}
@@ -553,9 +605,13 @@ export default function Home() {
         route={selectedRouteForVerification}
         onBack={() => {
           setSelectedRouteForVerification(null);
-          setShowVerifyModal(true);
+          setIsDirectVerification(false);
+          setRestoredFormState(undefined);
+          if (!isDirectVerification) setShowVerifyModal(true);
         }}
         onSuccess={handleVerificationSuccess}
+        allowUnauthenticated={isDirectVerification}
+        initialFormState={restoredFormState}
       />
     </div>
   );

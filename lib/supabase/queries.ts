@@ -362,9 +362,8 @@ export async function searchRoutes(
       fareMax: s.fare_max,
     }));
 
-  const allFares = steps.flatMap((s) => [s.fareMin, s.fareMax].filter((v) => v > 0));
-  const totalFareMin = allFares.length ? Math.min(...allFares) : 0;
-  const totalFareMax = allFares.length ? Math.max(...allFares) : 0;
+  const totalFareMin = steps.reduce((sum, s) => sum + (s.fareMin > 0 ? s.fareMin : 0), 0);
+  const totalFareMax = steps.reduce((sum, s) => sum + (s.fareMax > 0 ? s.fareMax : 0), 0);
 
   const fromName = Array.isArray(r.source_location) ? r.source_location[0]?.name : r.source_location?.name;
   const toName = Array.isArray(r.destination_location) ? r.destination_location[0]?.name : r.destination_location?.name;

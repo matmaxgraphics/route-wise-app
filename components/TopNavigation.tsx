@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import { Bell, LogOut, UserPlus, Sun, Moon } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useTheme } from "next-themes";
 import { useAuth } from "@/lib/auth-context";
 import { useRouter } from "next/navigation";
@@ -17,7 +17,10 @@ interface TopNavigationProps {
 export default function TopNavigation({ xpProgress = 0 }: TopNavigationProps) {
   const { user, isAuthenticated, signOut } = useAuth();
   const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+
+  useEffect(() => setMounted(true), []);
   const [isSigningOut, setIsSigningOut] = useState(false);
   const router = useRouter();
 
@@ -57,10 +60,14 @@ export default function TopNavigation({ xpProgress = 0 }: TopNavigationProps) {
             aria-label="Toggle theme"
             type="button"
           >
-            {theme === "dark" ? (
-              <Sun className="w-5 h-5 text-[rgb(var(--accent-shade))]" />
+            {mounted ? (
+              theme === "dark" ? (
+                <Sun className="w-5 h-5 text-[rgb(var(--accent-shade))]" />
+              ) : (
+                <Moon className="w-5 h-5 text-[rgb(var(--on-surface-variant))]" />
+              )
             ) : (
-              <Moon className="w-5 h-5 text-[rgb(var(--on-surface-variant))]" />
+              <div className="w-5 h-5" />
             )}
           </motion.button>
 
@@ -74,8 +81,7 @@ export default function TopNavigation({ xpProgress = 0 }: TopNavigationProps) {
                 aria-label="Notifications"
                 type="button"
               >
-                <Bell className="w-5 h-5 text-[rgb(var(--primary))] transition-colors" />
-                <span className="absolute top-1 right-1 w-2 h-2 bg-[rgb(var(--secondary-container))] rounded-full animate-pulse" />
+                <Bell className="w-5 h-5 text-[rgb(var(--on-surface-variant))] transition-colors" />
               </motion.button>
 
               {/* Profile Avatar with XP Ring */}
