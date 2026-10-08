@@ -208,15 +208,18 @@ export default function Home() {
     }
   };
 
-  const handleVerificationSuccess = () => {
+  const closeVerificationFlow = () => {
     setSelectedRouteForVerification(null);
     setIsDirectVerification(false);
     setRestoredFormState(undefined);
+    setShowVerifyModal(false);
+  };
+
+  const handleVerificationSuccess = () => {
     if (user?.id) {
       const supabase = createClient();
       awardXP(supabase, user.id, 10, false).then(() => refreshProfile());
     }
-    setTimeout(() => setShowVerifyModal(false), 3000);
   };
 
   const handleLoadMore = async () => {
@@ -602,6 +605,7 @@ export default function Home() {
       />
 
       <RouteVerificationFlow
+        key={selectedRouteForVerification?.id ?? "none"}
         route={selectedRouteForVerification}
         onBack={() => {
           setSelectedRouteForVerification(null);
@@ -610,6 +614,7 @@ export default function Home() {
           if (!isDirectVerification) setShowVerifyModal(true);
         }}
         onSuccess={handleVerificationSuccess}
+        onDone={closeVerificationFlow}
         allowUnauthenticated={isDirectVerification}
         initialFormState={restoredFormState}
       />

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { RouteToVerify } from "@/lib/types";
 import { useAuth } from "@/lib/auth-context";
@@ -33,6 +33,7 @@ interface RouteVerificationFlowProps {
   route: RouteToVerify | null;
   onBack: () => void;
   onSuccess: (data: any) => void;
+  onDone: () => void;
   allowUnauthenticated?: boolean;
   initialFormState?: Partial<Pick<VerificationFormState, "accuracyRating" | "fareAccuracy" | "safetyRating" | "safetyTips">>;
 }
@@ -41,6 +42,7 @@ export default function RouteVerificationFlow({
   route,
   onBack,
   onSuccess,
+  onDone,
   allowUnauthenticated,
   initialFormState,
 }: RouteVerificationFlowProps) {
@@ -58,6 +60,15 @@ export default function RouteVerificationFlow({
     errors: {},
     submitted: false,
   });
+
+  const onDoneRef = useRef(onDone);
+  onDoneRef.current = onDone;
+
+  useEffect(() => {
+    if (step !== "success") return;
+    const timer = setTimeout(() => onDoneRef.current(), 5000);
+    return () => clearTimeout(timer);
+  }, [step]);
 
   if (!route) return null;
 
@@ -684,10 +695,10 @@ export default function RouteVerificationFlow({
                 className="flex gap-3 pt-4"
               >
                 <button
-                  onClick={() => onBack()}
+                  onClick={() => onDone()}
                   className="flex-1 px-4 py-3 gradient-blue text-[rgb(var(--on-secondary-container))] font-semibold transition-colors"
                 >
-                  Back to Contribute
+                  {allowUnauthenticated ? "Done" : "Back to Contribute"}
                 </button>
               </motion.div>
             </div>
